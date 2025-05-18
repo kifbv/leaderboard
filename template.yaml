@@ -1,0 +1,455 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Ping-Pong Leaderboard Application
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 128
+    Runtime: python3.13
+    Architectures:
+      - x86_64
+    Tracing: Active
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref LeaderboardTable
+        USER_POOL_ID: !Ref UserPool
+        USER_POOL_CLIENT_ID: !Ref UserPoolClient
+        STATIC_BUCKET: !Ref StaticBucket
+
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    Description: Deployment stage
+    AllowedValues:
+      - dev
+      - prod
+  GoogleClientId:
+    Type: String
+    Description: Google OAuth Client ID
+    NoEcho: true
+  GoogleClientSecret:
+    Type: String
+    Description: Google OAuth Client Secret
+    NoEcho: true
+  AdminEmails:
+    Type: String
+    Description: Comma-separated list of admin email addresses
+    Default: "admin@example.com"
+
+Resources:
+  # DynamoDB Table
+  LeaderboardTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub leaderboard-${Stage}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+        - AttributeName: Type
+          AttributeType: S
+        - AttributeName: EloScore
+          AttributeType: N
+        - AttributeName: SiteId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: GSI1
+          KeySchema:
+            - AttributeName: SK
+              KeyType: HASH
+            - AttributeName: PK
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GSI2
+          KeySchema:
+            - AttributeName: Type
+              KeyType: HASH
+            - AttributeName: EloScore
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GSI3
+          KeySchema:
+            - AttributeName: SiteId
+              KeyType: HASH
+            - AttributeName: Type
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+  
+  # API Gateway
+  LeaderboardApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt UserPool.Arn
+          AdminAuthorizer:
+            FunctionArn: !GetAtt AdminAuthorizerFunction.Arn
+            FunctionPayloadType: REQUEST
+            Identity:
+              Headers:
+                - Authorization
+      Cors:
+        AllowMethods: "'GET, POST, PUT, DELETE, OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+      TracingEnabled: true
+  
+  # Cognito User Pool
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub leaderboard-users-${Stage}
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      MfaConfiguration: "OFF"
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+  
+  # Cognito User Pool Client
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    DependsOn: UserPoolIdentityProvider
+    Properties:
+      ClientName: !Sub leaderboard-app-client-${Stage}
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+      SupportedIdentityProviders:
+        - COGNITO
+        - Google
+      CallbackURLs:
+        - "https://example.com/callback" # Will be updated after deployment
+      LogoutURLs:
+        - "https://example.com" # Will be updated after deployment
+      AllowedOAuthFlows:
+        - code
+        - implicit
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+
+  # Cognito Identity Provider
+  UserPoolIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      ProviderName: Google
+      ProviderType: Google
+      ProviderDetails:
+        client_id: !Ref GoogleClientId
+        client_secret: !Ref GoogleClientSecret
+        authorize_scopes: email profile openid
+      UserPoolId: !Ref UserPool
+      AttributeMapping:
+        email: email
+        name: name
+        picture: picture
+
+  # S3 Bucket for Static Website
+  StaticBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub leaderboard-static-${Stage}-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - "*"
+            MaxAge: 3600
+
+  # S3 Bucket Policy
+  StaticBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StaticBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${StaticBucket}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}"
+
+  # CloudFront Distribution
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !Sub ${StaticBucket}.s3.${AWS::Region}.amazonaws.com
+            Id: S3Origin
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+          - DomainName: !Sub ${LeaderboardApi}.execute-api.${AWS::Region}.amazonaws.com
+            Id: APIOrigin
+            OriginPath: !Sub "/${Stage}"
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginSSLProtocols:
+                - TLSv1.2
+        Enabled: true
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # Managed-CachingOptimized
+          OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf # Managed-CORS-S3Origin
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: APIOrigin
+            ViewerProtocolPolicy: https-only
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac # Managed-AllViewerExceptHostHeader
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+
+  # Lambda Functions
+  # Players API
+  GetPlayersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/players/
+      Handler: get_players.handler
+      Description: Lists top players or players by site
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        GetTopPlayers:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/players
+            Method: GET
+
+  GetPlayerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/players/
+      Handler: get_player.handler
+      Description: Gets a player profile
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        GetPlayer:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/players/{id}
+            Method: GET
+
+  CreatePlayerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/players/
+      Handler: create_player.handler
+      Description: Creates a new player
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        CreatePlayer:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/players
+            Method: POST
+
+  # Games API
+  GetGamesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/games/
+      Handler: get_games.handler
+      Description: Lists recent games
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        GetGames:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/games
+            Method: GET
+
+  CreateGameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/games/
+      Handler: create_game.handler
+      Description: Records a new game
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        CreateGame:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/games
+            Method: POST
+
+  # Tournaments API
+  GetTournamentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/tournaments/
+      Handler: get_tournaments.handler
+      Description: Lists recent tournaments
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        GetTournaments:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/tournaments
+            Method: GET
+
+  CreateTournamentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/tournaments/
+      Handler: create_tournament.handler
+      Description: Creates a new tournament
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        CreateTournament:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/tournaments
+            Method: POST
+            Auth:
+              Authorizer: AdminAuthorizer
+
+  # Sites API
+  GetSitesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/sites/
+      Handler: get_sites.handler
+      Description: Lists all sites
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        GetSites:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/sites
+            Method: GET
+
+  CreateSiteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/sites/
+      Handler: create_site.handler
+      Description: Creates a new site
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LeaderboardTable
+      Events:
+        CreateSite:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LeaderboardApi
+            Path: /api/sites
+            Method: POST
+            Auth:
+              Authorizer: AdminAuthorizer
+
+  # Admin Authorizer Lambda
+  AdminAuthorizerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/functions/auth/
+      Handler: admin_authorizer.handler
+      Description: Authorizer for admin-only endpoints
+      Environment:
+        Variables:
+          ADMIN_EMAILS: !Ref AdminEmails
+
+Outputs:
+  WebsiteURL:
+    Description: URL for the CloudFront distribution
+    Value: !Sub https://${CloudFrontDistribution.DomainName}
+  ApiURL:
+    Description: URL for the API Gateway stage
+    Value: !Sub https://${LeaderboardApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}
+  UserPoolId:
+    Description: ID of the Cognito User Pool
+    Value: !Ref UserPool
+  UserPoolClientId:
+    Description: ID of the Cognito User Pool Client
+    Value: !Ref UserPoolClient
+  LeaderboardTableName:
+    Description: Name of the DynamoDB table
+    Value: !Ref LeaderboardTable
+  StaticBucketName:
+    Description: Name of the S3 bucket for static assets
+    Value: !Ref StaticBucket
