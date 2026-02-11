@@ -33,7 +33,7 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - Note: Prisma 7 seed config lives in `prisma.config.ts` (migrations.seed), not package.json; use `tsx` runner
   - Source: see-the-standings.md US-004
 
-- **US-003: Create leaderboard API endpoint**
+- **US-003: Create leaderboard API endpoint** ✅ DONE
   - GET /api/leaderboard returns all players sorted by eloRating desc
   - Include rank (1-indexed, ties share rank), id, name, eloRating, wins, losses, winRate (computed)
   - Players with zero matches included (winRate = 0)

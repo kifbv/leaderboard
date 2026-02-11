@@ -38,3 +38,13 @@ Started: 2026-02-11
   - Use `tsx` (not `ts-node`) for TypeScript seed scripts — simpler, works with ESM
   - Seed scripts should create their own PrismaClient (not import the Next.js singleton) to avoid globalThis issues
 ---
+
+## 2026-02-11 - US-003
+- Created GET /api/leaderboard endpoint at `src/app/api/leaderboard/route.ts`
+- Returns players sorted by eloRating desc with rank (ties share rank), winRate (computed, whole-number %)
+- Files changed: `src/app/api/leaderboard/route.ts`, `prd.json`
+- **Learnings for future iterations:**
+  - Rank ties: track `rank` as a separate variable that only advances when eloRating changes from previous player
+  - winRate = 0 when wins + losses = 0 (avoid division by zero); use `Math.round()` for whole-number percentage
+  - Next.js App Router API routes live at `src/app/api/[path]/route.ts`; no layout.tsx required for API-only routes to typecheck
+---

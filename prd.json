@@ -51,7 +51,7 @@
       ],
       "category": "leaderboard",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-001"],
       "notes": "Win rate displayed as whole-number percentage. Rank is sequential starting at 1; ties share rank."
     },
