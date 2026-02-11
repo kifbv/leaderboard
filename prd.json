@@ -1,0 +1,234 @@
+{
+  "name": "Ping Pong Leaderboard",
+  "branchName": "ralph/leaderboard-v1",
+  "description": "Mobile-first web app for recording office ping pong matches and tracking ELO rankings. Next.js App Router + Prisma + SQLite.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Initialize Next.js project with Prisma and SQLite",
+      "description": "As a developer, I want the Next.js project initialized with Prisma and SQLite so that all subsequent features have a working data layer.",
+      "acceptanceCriteria": [
+        "Next.js app created with TypeScript enabled",
+        "Prisma configured with SQLite provider",
+        "Player model exists with fields: id, name, eloRating (default 1000), wins (default 0), losses (default 0), createdAt",
+        "Match model exists with type (SINGLES/DOUBLES), createdAt, and MatchPlayer join table relating players to matches with a role (e.g. winner/loser, team1/team2)",
+        "npx prisma migrate dev runs without errors",
+        "Typecheck passes"
+      ],
+      "category": "setup",
+      "priority": 1,
+      "passes": false,
+      "dependsOn": [],
+      "notes": "Design Match schema to support both singles (2 players) and doubles (4 players) via a MatchPlayer join table upfront."
+    },
+    {
+      "id": "US-002",
+      "title": "Create database seed script",
+      "description": "As a developer, I want a seed script that populates the database with sample players so that the leaderboard can be visually verified during development.",
+      "acceptanceCriteria": [
+        "npx prisma db seed creates at least 5 players with varying ELO ratings, wins, and losses",
+        "Seed script is idempotent (can be run multiple times without duplicating data)",
+        "Seeded data produces a visually representative leaderboard",
+        "Typecheck passes"
+      ],
+      "category": "setup",
+      "priority": 2,
+      "passes": false,
+      "dependsOn": ["US-001"],
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Create leaderboard API endpoint",
+      "description": "As a frontend consumer, I want a GET endpoint that returns all players sorted by ELO rating so that the leaderboard can be rendered.",
+      "acceptanceCriteria": [
+        "GET /api/leaderboard returns JSON array of players",
+        "Players are sorted by eloRating descending",
+        "Each player object includes: id, name, eloRating, wins, losses, winRate (calculated percentage)",
+        "Response includes a rank field (1-indexed position); ties in ELO share the same rank",
+        "Players with zero matches are included (winRate = 0)",
+        "Typecheck passes"
+      ],
+      "category": "leaderboard",
+      "priority": 3,
+      "passes": false,
+      "dependsOn": ["US-001"],
+      "notes": "Win rate displayed as whole-number percentage. Rank is sequential starting at 1; ties share rank."
+    },
+    {
+      "id": "US-004",
+      "title": "Build leaderboard page",
+      "description": "As an office worker, I want to see a ranked list of players with their stats on my phone so that I can check the standings at a glance.",
+      "acceptanceCriteria": [
+        "Landing page (/) displays a table/list of all players",
+        "Each row shows: rank, player name, ELO rating, wins, losses, win rate %",
+        "List is sorted by ELO rating (highest first)",
+        "Mobile-first layout: readable without horizontal scrolling on a 375px-wide screen",
+        "Empty state shown when no players exist ('No players yet')",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "category": "leaderboard",
+      "priority": 4,
+      "passes": false,
+      "dependsOn": ["US-003"],
+      "notes": "Use Next.js App Router with server components. Fetches data on each page load (no caching)."
+    },
+    {
+      "id": "US-005",
+      "title": "Create ELO calculation utility",
+      "description": "As a developer, I want a pure function that computes new ELO ratings for two opponents so that match results produce correct ranking changes.",
+      "acceptanceCriteria": [
+        "Function accepts two current ratings and a result (who won) and returns both new ratings",
+        "Uses standard ELO formula with K-factor of 32 and starting rating of 1000",
+        "Unit tests cover: equal ratings, large rating gap (underdog wins), large rating gap (favorite wins)",
+        "Ratings are rounded to the nearest integer",
+        "Typecheck passes"
+      ],
+      "category": "match-recording",
+      "priority": 5,
+      "passes": false,
+      "dependsOn": ["US-001"],
+      "notes": "Pure function in lib/elo.ts. Formula: expectedScore = 1 / (1 + 10^((opponentRating - playerRating) / 400)), newRating = oldRating + K * (actualScore - expectedScore)"
+    },
+    {
+      "id": "US-006",
+      "title": "Create singles match recording API",
+      "description": "As a frontend consumer, I want a POST endpoint that records a 1v1 match result and updates both players' ELO ratings in a single transaction.",
+      "acceptanceCriteria": [
+        "POST /api/matches accepts { type: 'SINGLES', winnerId: number, loserId: number }",
+        "Endpoint validates that both player IDs exist and are different from each other",
+        "Creates a Match record and updates both players' eloRating, wins, and losses in a single database transaction",
+        "Returns the created match with the ELO changes (old and new ratings for each player)",
+        "Returns 400 with a descriptive message for invalid input",
+        "Typecheck passes"
+      ],
+      "category": "match-recording",
+      "priority": 6,
+      "passes": false,
+      "dependsOn": ["US-005"],
+      "notes": "All database mutations must use Prisma transactions for atomicity."
+    },
+    {
+      "id": "US-007",
+      "title": "Create doubles match recording API",
+      "description": "As a frontend consumer, I want the POST endpoint to also handle 2v2 match results, updating ELO ratings for all four players.",
+      "acceptanceCriteria": [
+        "POST /api/matches accepts { type: 'DOUBLES', winnerTeam: [id, id], loserTeam: [id, id] }",
+        "Endpoint validates all four player IDs exist and are all distinct",
+        "For ELO calculation, uses the average rating of each team as the team's effective rating",
+        "Each player on the winning team gains ELO; each player on the losing team loses ELO (same delta based on team averages)",
+        "Creates a Match record and updates all four players in a single database transaction",
+        "Returns 400 with a descriptive message for invalid input (duplicate players, missing players)",
+        "Typecheck passes"
+      ],
+      "category": "match-recording",
+      "priority": 7,
+      "passes": false,
+      "dependsOn": ["US-006"],
+      "notes": "Extends the existing POST /api/matches endpoint. Team effective rating = average of two players' ratings."
+    },
+    {
+      "id": "US-008",
+      "title": "Build singles match logging UI",
+      "description": "As an office worker, I want to pick two players and tap the winner to log a 1v1 match from my phone.",
+      "acceptanceCriteria": [
+        "A 'Log Match' page or modal is accessible from the main navigation",
+        "User selects match type (Singles selected by default)",
+        "Two player dropdowns allow selecting Player 1 and Player 2 from all registered players",
+        "A player cannot be selected for both slots simultaneously",
+        "User taps one of two clearly labeled buttons to indicate the winner",
+        "On success, a confirmation is shown with the ELO changes (e.g., '+18 / -18')",
+        "Form resets after successful submission so another match can be logged immediately",
+        "Player dropdowns are sorted alphabetically by name",
+        "Mobile-first layout: comfortably usable on a 375px-wide screen",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "category": "match-recording",
+      "priority": 8,
+      "passes": false,
+      "dependsOn": ["US-004", "US-006"],
+      "notes": "Needs navigation from leaderboard page. Submit action disabled until both players selected."
+    },
+    {
+      "id": "US-009",
+      "title": "Build doubles match logging UI",
+      "description": "As an office worker, I want to pick four players across two teams and tap the winning team to log a 2v2 match.",
+      "acceptanceCriteria": [
+        "When 'Doubles' match type is selected, the form shows Team 1 (two player selects) and Team 2 (two player selects)",
+        "No player can appear in more than one slot",
+        "User taps one of two buttons to indicate the winning team",
+        "On success, a confirmation is shown with each player's ELO change",
+        "Form resets after successful submission",
+        "Mobile-first layout: comfortably usable on a 375px-wide screen",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "category": "match-recording",
+      "priority": 9,
+      "passes": false,
+      "dependsOn": ["US-007", "US-008"],
+      "notes": "Extends the Log Match page with a Singles/Doubles toggle."
+    },
+    {
+      "id": "US-010",
+      "title": "Set up admin secret and environment config",
+      "description": "As a developer, I want the app to use a secret URL segment for the admin page so that only people who know the link can access roster management.",
+      "acceptanceCriteria": [
+        "An environment variable ADMIN_SECRET holds the secret path segment",
+        "A .env.example file documents this variable with a placeholder value",
+        "The secret segment is at least 16 characters when set in .env",
+        "If ADMIN_SECRET is not set, the admin routes return 404",
+        "Typecheck passes"
+      ],
+      "category": "admin",
+      "priority": 10,
+      "passes": false,
+      "dependsOn": ["US-001"],
+      "notes": "Admin routes return 404 (not 403) for wrong secrets to avoid revealing the path exists."
+    },
+    {
+      "id": "US-011",
+      "title": "Create admin player API endpoints",
+      "description": "As an admin page consumer, I want API endpoints to list all players and add new ones so that the roster can be managed.",
+      "acceptanceCriteria": [
+        "POST /api/admin/[secret]/players accepts { name: string }",
+        "Returns 201 with the created player object (id, name, eloRating, wins, losses)",
+        "Player is created with eloRating 1000, wins 0, losses 0",
+        "Returns 400 if name is empty or only whitespace",
+        "Returns 409 if a player with that exact name already exists (case-insensitive check)",
+        "Returns 404 if the secret segment does not match ADMIN_SECRET",
+        "GET /api/admin/[secret]/players returns JSON array of all players sorted alphabetically by name",
+        "GET also returns 404 for wrong secret",
+        "Typecheck passes"
+      ],
+      "category": "admin",
+      "priority": 11,
+      "passes": false,
+      "dependsOn": ["US-010"],
+      "notes": "Player names trimmed of whitespace before saving."
+    },
+    {
+      "id": "US-012",
+      "title": "Build admin roster management UI",
+      "description": "As an office admin, I want a page at the secret URL where I can see all players and add new ones so that I can manage who's on the leaderboard.",
+      "acceptanceCriteria": [
+        "Page is accessible at /admin/[secret]",
+        "Page displays a list of all current players (name and ELO rating)",
+        "A text input and 'Add Player' button allow adding a new player by name",
+        "On success, the new player appears in the list without a full page reload",
+        "On error (duplicate name, empty name), a clear error message is shown",
+        "Visiting /admin/wrong-secret shows a 404 page",
+        "Mobile-first layout: usable on a 375px-wide screen",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "category": "admin",
+      "priority": 12,
+      "passes": false,
+      "dependsOn": ["US-011"],
+      "notes": ""
+    }
+  ]
+}
