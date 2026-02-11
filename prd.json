@@ -169,7 +169,7 @@
       ],
       "category": "match-recording",
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-007", "US-008"],
       "notes": "Extends the Log Match page with a Singles/Doubles toggle."
     },

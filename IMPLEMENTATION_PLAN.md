@@ -81,11 +81,12 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - Bug fixed: root `app/` boilerplate was shadowing `src/app/`, causing all routes to 404 silently
   - Source: record-a-match.md US-004
 
-- **US-009: Build doubles match logging UI**
-  - Doubles toggle shows Team 1 / Team 2 with two selects each
-  - No player duplication across any slot
-  - Winner team buttons, success confirmation with per-player ELO delta
-  - Form resets after submission, mobile-first
+- **US-009: Build doubles match logging UI** ✅ DONE
+  - Extends LogMatchForm.tsx with Singles/Doubles toggle
+  - Team 1 / Team 2 each get two player selects; cross-slot deduplication via disabledIds array
+  - Winner team buttons show team name + player names; confirmation shows per-player ELO delta
+  - Form resets after submission; toggle switch also resets form state
+  - Extracted reusable PlayerSelect sub-component
   - Source: record-a-match.md US-005
 
 ### Phase 6: Admin / Roster Management

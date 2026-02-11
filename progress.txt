@@ -120,3 +120,18 @@ Started: 2026-02-11
   - Interactive pages: split into page.tsx (server, fetches data) + XxxForm.tsx (client, handles interaction). Pass minimal data with Prisma `select:`.
   - `disabled` on `<option>` prevents a player from being selected in the other dropdown without complex JS filtering
 ---
+
+## 2026-02-11 - US-009
+- Extended `src/app/log-match/LogMatchForm.tsx` with a Singles/Doubles toggle
+- Doubles mode shows Team 1 (two player selects) and Team 2 (two player selects)
+- Each select disables all IDs already chosen in any other slot — prevents any player appearing twice
+- Winner buttons show team name + player names; success confirmation shows per-player ELO delta
+- Form resets after successful submission; toggle resets form state on switch
+- Extracted reusable `PlayerSelect` sub-component to avoid repeated select markup
+- All quality checks pass (typecheck, lint, vitest, build)
+- Files changed: `src/app/log-match/LogMatchForm.tsx`, `prd.json`
+- **Learnings for future iterations:**
+  - For 4-slot deduplication, pass `disabledIds` as array to each select and check with `.includes(String(id))` — simpler than global filtering
+  - TypeScript discriminated union (`type: "SINGLES" | "DOUBLES"`) enables narrowing result type in JSX without casts
+  - `new Set(ids.filter(Boolean)).size === ids.length` is a clean distinctness check for arrays where some may be empty strings
+---
