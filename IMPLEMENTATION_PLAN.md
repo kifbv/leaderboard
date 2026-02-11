@@ -56,7 +56,7 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - Standard ELO formula, K=32. Vitest installed; 3 tests pass.
   - Source: record-a-match.md US-001
 
-- **US-006: Create singles match recording API**
+- **US-006: Create singles match recording API** ✅ DONE
   - POST /api/matches with { type: "SINGLES", winnerId, loserId }
   - Validate player IDs exist and differ
   - Atomic transaction: create Match, update ELO/wins/losses

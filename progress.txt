@@ -14,6 +14,7 @@
 ---
 
 # Ralph Progress Log
+
 Started: 2026-02-11
 ---
 
@@ -77,4 +78,17 @@ Started: 2026-02-11
   - Rank ties: track `rank` as a separate variable that only advances when eloRating changes from previous player
   - winRate = 0 when wins + losses = 0 (avoid division by zero); use `Math.round()` for whole-number percentage
   - Next.js App Router API routes live at `src/app/api/[path]/route.ts`; no layout.tsx required for API-only routes to typecheck
+---
+
+## 2026-02-11 - US-006
+- Created POST /api/matches endpoint at `src/app/api/matches/route.ts`
+- Accepts `{ type: "SINGLES", winnerId: number, loserId: number }`
+- Validates both player IDs exist and are distinct; returns 400 with descriptive message otherwise
+- Uses Prisma transaction: creates Match + MatchPlayer records for winner/loser, updates eloRating/wins/losses atomically
+- Returns 201 with matchId, type, winner/loser objects each containing id, name, oldRating, newRating, delta
+- Files changed: `src/app/api/matches/route.ts`, `prd.json`
+- **Learnings for future iterations:**
+  - `prisma.$transaction(async (tx) => { ... })` for interactive transactions; nested create with `include` works inside transactions
+  - Fetch both players with `findMany({ where: { id: { in: [id1, id2] } } })` to validate existence in a single query
+  - MatchPlayer `role` field: "winner" / "loser" for singles; this extends naturally to doubles roles
 ---

@@ -105,7 +105,7 @@
       ],
       "category": "match-recording",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-005"],
       "notes": "All database mutations must use Prisma transactions for atomicity."
     },
