@@ -2,23 +2,33 @@
 
 ## Build & Run
 
-<!-- Add your project-specific commands here -->
-<!-- Examples: -->
-<!-- npm install && npm run dev -->
-<!-- python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt -->
+```bash
+npm install
+npx prisma migrate dev   # run migrations
+npx prisma generate      # generate Prisma client (output: src/generated/prisma)
+npm run dev              # start dev server on http://localhost:3000
+```
 
 ## Validation
 
 Run these after implementing to get feedback:
 
-<!-- Uncomment and customize for your project: -->
-<!-- - Tests: `npm test` -->
-<!-- - Typecheck: `npx tsc --noEmit` -->
-<!-- - Lint: `npm run lint` -->
-<!-- - Build: `npm run build` -->
+- Typecheck: `npx tsc --noEmit`
+- Lint: `npm run lint`
+- Build: `npm run build`
 
 ## Operational Notes
 
-<!-- Learnings about how to run and develop in this project. Keep brief (~60 lines max). -->
-<!-- This file is read at the start of every Ralph iteration - a bloated CLAUDE.md pollutes context. -->
-<!-- Status updates and progress notes belong in progress.txt and IMPLEMENTATION_PLAN.md, not here. -->
+**Stack:** Next.js 16 (App Router) + Prisma 7 + SQLite (via better-sqlite3 driver adapter)
+
+**Prisma 7 quirks:**
+- Uses new `prisma-client` generator (not `prisma-client-js`) — output in `src/generated/prisma/`
+- Requires driver adapter: `PrismaBetterSqlite3` from `@prisma/adapter-better-sqlite3`
+- `PrismaClient` constructor signature: `new PrismaClient({ adapter })`
+- Import path: `../generated/prisma/client` (no index.ts in generated dir)
+- Schema has no `url` in datasource — URL provided via `prisma.config.ts` for CLI and via adapter at runtime
+- DATABASE_URL format: `file:./dev.db` (relative to project root; db file is at root)
+
+**Path aliases:** `@/*` maps to root `./*` (not `src/`). Use relative imports inside `src/`.
+
+**Seed:** `npx prisma db seed` (configured in package.json `prisma.seed`)

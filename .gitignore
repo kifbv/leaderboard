@@ -16,5 +16,11 @@ build/
 .DS_Store
 Thumbs.db
 
+# Database
+*.db
+*.db-journal
+
 # Ralph internal
 .last-branch
+
+/src/generated/prisma

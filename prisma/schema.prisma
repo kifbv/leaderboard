@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Player {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  eloRating   Int           @default(1000)
+  wins        Int           @default(0)
+  losses      Int           @default(0)
+  createdAt   DateTime      @default(now())
+  matchPlayers MatchPlayer[]
+}
+
+model Match {
+  id           Int           @id @default(autoincrement())
+  type         String        // "SINGLES" or "DOUBLES"
+  createdAt    DateTime      @default(now())
+  matchPlayers MatchPlayer[]
+}
+
+model MatchPlayer {
+  id       Int    @id @default(autoincrement())
+  match    Match  @relation(fields: [matchId], references: [id])
+  matchId  Int
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId Int
+  role     String // "winner" | "loser" | "winner_team1" | "winner_team2" | "loser_team1" | "loser_team2"
+}
