@@ -51,10 +51,9 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 ### Phase 4: ELO Calculation & Match Backend
 
-- **US-005: Create ELO calculation utility**
-  - Pure function in lib/elo.ts
-  - Standard ELO formula, K=32, starting 1000
-  - Unit tests: equal ratings, underdog wins, favorite wins
+- **US-005: Create ELO calculation utility** ✅ DONE
+  - Pure function in lib/elo.ts: `calculateElo(winnerRating, loserRating)` → `{ newWinnerRating, newLoserRating }`
+  - Standard ELO formula, K=32. Vitest installed; 3 tests pass.
   - Source: record-a-match.md US-001
 
 - **US-006: Create singles match recording API**

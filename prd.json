@@ -87,7 +87,7 @@
       ],
       "category": "match-recording",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-001"],
       "notes": "Pure function in lib/elo.ts. Formula: expectedScore = 1 / (1 + 10^((opponentRating - playerRating) / 400)), newRating = oldRating + K * (actualScore - expectedScore)"
     },

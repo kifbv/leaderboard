@@ -9,6 +9,8 @@
 **ESLint immutability:** react-hooks/immutability rule flags `let` variable reassignment inside render scope. Use `reduce` instead of mutation inside `.map()` callbacks.
 **Server components + data fetching:** Use `export const dynamic = "force-dynamic"` to prevent caching; query Prisma directly rather than making HTTP calls to API routes.
 
+**Unit testing pattern:** `vitest run` with `npm test`. Tests live at `src/lib/*.test.ts`. No config file needed — vitest works out of the box for pure TS utility files.
+
 ---
 
 # Ralph Progress Log
@@ -52,6 +54,19 @@ Started: 2026-02-11
   - ESLint react-hooks/immutability rule flags `let` reassignment inside render — use `reduce` instead of `let rank = 1` + `.map()` mutation
   - Next.js App Router server components should use `export const dynamic = "force-dynamic"` to opt out of caching when fetching data that changes per request
   - Server components can query Prisma directly — no need for an HTTP round-trip to the API route
+---
+
+## 2026-02-11 - US-005
+- Created `src/lib/elo.ts` — pure `calculateElo(winnerRating, loserRating)` function returning `{ newWinnerRating, newLoserRating }`
+- Installed `vitest` as devDependency; added `"test": "vitest run"` to package.json scripts
+- Created `src/lib/elo.test.ts` with 3 tests: equal ratings (±16), underdog wins (±24), favorite wins (±8)
+- All 3 tests pass; typecheck and lint pass
+- Files changed: `src/lib/elo.ts`, `src/lib/elo.test.ts`, `package.json`, `package-lock.json`
+- **Learnings for future iterations:**
+  - Vitest works out of the box for pure TypeScript utility files — no config file needed
+  - ELO formula: `expectedWinner = 1 / (1 + 10^((loserRating - winnerRating) / 400))`, delta = `K * (1 - expected)`, K=32
+  - When equal (1000 vs 1000): delta = 16. Underdog wins (1000 beats 1200): delta = 24. Favorite wins (1200 beats 1000): delta = 8.
+  - loserDelta = -(1 - expectedWinner) which simplifies correctly since expectedLoser = 1 - expectedWinner
 ---
 
 ## 2026-02-11 - US-003
