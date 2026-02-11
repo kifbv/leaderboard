@@ -208,7 +208,7 @@
       ],
       "category": "admin",
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-010"],
       "notes": "Player names trimmed of whitespace before saving."
     },

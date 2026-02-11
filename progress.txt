@@ -12,6 +12,8 @@
 **Unit testing pattern:** `vitest run` with `npm test`. Tests live at `src/lib/*.test.ts`. No config file needed — vitest works out of the box for pure TS utility files.
 **Route shadowing gotcha:** If a root-level `app/` directory exists alongside `src/app/`, Next.js App Router picks up `app/` at root first, silently ignoring `src/app/`. This manifests as all custom routes returning 404 with zero error output. Fix: remove the stale root `app/` directory.
 **Interactive UI pattern:** Split into server component (page.tsx — fetches data from Prisma) + client component (XxxForm.tsx — handles state, events). Server component uses `select:` to minimize data sent to client.
+**SQLite case-insensitive search:** Prisma with SQLite does NOT support `mode: "insensitive"` — use app-level: `items.find(x => x.name.toLowerCase() === input.toLowerCase())`.
+**Dynamic route params:** Next.js App Router passes params as `Promise<{ param: string }>` — always `await params` before destructuring.
 
 ---
 
@@ -146,4 +148,15 @@ Started: 2026-02-11
   - `.env` is gitignored; only `.env.example` gets committed — that's the right pattern for secrets
   - Admin routes return 404 (not 403) so attackers can't distinguish wrong-secret from not-found
   - `validateAdminSecret` returns response-or-null: `const err = validateAdminSecret(secret); if (err) return err;`
+---
+
+## 2026-02-11 - US-011
+- Created `src/app/api/admin/[secret]/players/route.ts` with GET and POST handlers
+- GET returns all players sorted alphabetically by name (id, name, eloRating, wins, losses)
+- POST creates a player: trims whitespace, returns 400 for empty/missing name, 409 on case-insensitive duplicate, 201 on success
+- Both routes return 404 for wrong/missing ADMIN_SECRET via `validateAdminSecret`
+- Files changed: `src/app/api/admin/[secret]/players/route.ts`, `prd.json`
+- **Learnings for future iterations:**
+  - Prisma with SQLite provider does NOT support `mode: "insensitive"` in string filters — use application-level lowercase comparison instead: `players.find(p => p.name.toLowerCase() === trimmedName.toLowerCase())`
+  - Dynamic route params in Next.js App Router are `Promise<{ param: string }>` — must `await params` before destructuring
 ---

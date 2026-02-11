@@ -96,11 +96,12 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - `src/lib/adminSecret.ts`: `validateAdminSecret(secret)` returns 404 response when unset/wrong, null when valid
   - Source: manage-the-roster.md US-001
 
-- **US-011: Create admin player API endpoints**
+- **US-011: Create admin player API endpoints** ✅ DONE
   - POST /api/admin/[secret]/players — create player (name validation, 409 on duplicate, case-insensitive)
   - GET /api/admin/[secret]/players — list all players alphabetically
   - Both return 404 for wrong secret
   - Player names trimmed of whitespace before saving
+  - Note: SQLite doesn't support Prisma `mode: "insensitive"` — use app-level lowercase comparison
   - Source: manage-the-roster.md US-002 + US-003
 
 - **US-012: Build admin roster management UI**
