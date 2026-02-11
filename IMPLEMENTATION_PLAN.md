@@ -27,9 +27,10 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 ### Phase 2: Seed Data & Leaderboard Backend
 
-- **US-002: Create database seed script**
+- **US-002: Create database seed script** ✅ DONE
   - Seed at least 5 players with varying ELO, wins, losses
   - Script must be idempotent
+  - Note: Prisma 7 seed config lives in `prisma.config.ts` (migrations.seed), not package.json; use `tsx` runner
   - Source: see-the-standings.md US-004
 
 - **US-003: Create leaderboard API endpoint**

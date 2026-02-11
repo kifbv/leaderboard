@@ -33,7 +33,7 @@
       ],
       "category": "setup",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-001"],
       "notes": ""
     },

@@ -31,4 +31,4 @@ Run these after implementing to get feedback:
 
 **Path aliases:** `@/*` maps to root `./*` (not `src/`). Use relative imports inside `src/`.
 
-**Seed:** `npx prisma db seed` (configured in package.json `prisma.seed`)
+**Seed:** `npx prisma db seed` (configured in `prisma.config.ts` → `migrations.seed`, not package.json)
