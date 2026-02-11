@@ -10,6 +10,8 @@
 **Server components + data fetching:** Use `export const dynamic = "force-dynamic"` to prevent caching; query Prisma directly rather than making HTTP calls to API routes.
 
 **Unit testing pattern:** `vitest run` with `npm test`. Tests live at `src/lib/*.test.ts`. No config file needed — vitest works out of the box for pure TS utility files.
+**Route shadowing gotcha:** If a root-level `app/` directory exists alongside `src/app/`, Next.js App Router picks up `app/` at root first, silently ignoring `src/app/`. This manifests as all custom routes returning 404 with zero error output. Fix: remove the stale root `app/` directory.
+**Interactive UI pattern:** Split into server component (page.tsx — fetches data from Prisma) + client component (XxxForm.tsx — handles state, events). Server component uses `select:` to minimize data sent to client.
 
 ---
 
@@ -105,4 +107,16 @@ Started: 2026-02-11
   - Avoid destructuring unused variables from calculateElo — ESLint no-unused-vars warns on them; only destructure what you use
   - `for...of` loop over player IDs for batch player updates inside a transaction is clean and avoids Promise.all complexity
   - Doubles delta = `newWinnerAvg - winnerAvg` (positive); losers get `-delta`; individual player new ratings = `oldRating + delta`
+---
+
+## 2026-02-11 - US-008
+- Removed stale root `app/` directory (create-next-app boilerplate) that was shadowing `src/app/` — this was the root cause of all routes returning 404 silently
+- Created `src/app/log-match/LogMatchForm.tsx` — client component with player dropdowns (sorted A-Z, disabled when already selected in other slot), winner buttons visible only when both players selected, ELO delta confirmation, form reset on success
+- Created `src/app/log-match/page.tsx` — server component fetching players from Prisma, rendering LogMatchForm
+- All routes (/, /api/leaderboard, /api/matches, /log-match) now correctly appear in `npm run build` output as dynamic routes (ƒ)
+- Files changed: deleted `app/*` (boilerplate), created `src/app/log-match/LogMatchForm.tsx`, `src/app/log-match/page.tsx`
+- **Learnings for future iterations:**
+  - Root `app/` vs `src/app/` conflict: Next.js silently picks root `app/` over `src/app/`. The server logs show compile+render times for unrecognized routes but still 404 — no error is logged. Fix: ensure no root `app/` directory exists.
+  - Interactive pages: split into page.tsx (server, fetches data) + XxxForm.tsx (client, handles interaction). Pass minimal data with Prisma `select:`.
+  - `disabled` on `<option>` prevents a player from being selected in the other dropdown without complex JS filtering
 ---

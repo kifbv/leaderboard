@@ -72,12 +72,13 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 ### Phase 5: Match Logging UI
 
-- **US-008: Build singles match logging UI**
+- **US-008: Build singles match logging UI** ✅ DONE
   - "Log Match" page accessible from navigation
   - Singles selected by default, two player dropdowns (no duplicate selection, sorted alphabetically)
   - Submit disabled until both players selected
   - Winner buttons, success confirmation with ELO delta
   - Form resets after submission, mobile-first
+  - Bug fixed: root `app/` boilerplate was shadowing `src/app/`, causing all routes to 404 silently
   - Source: record-a-match.md US-004
 
 - **US-009: Build doubles match logging UI**

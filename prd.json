@@ -148,7 +148,7 @@
       ],
       "category": "match-recording",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-004", "US-006"],
       "notes": "Needs navigation from leaderboard page."
     },
