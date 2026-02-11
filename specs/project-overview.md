@@ -9,7 +9,7 @@ Anyone at the office with a mobile phone. Non-technical, casual users who just w
 ## Jobs to Be Done
 1. **See the standings** - View the current ELO rankings for all players - Status: spec created
 2. **Record a match** - Log the result of a singles or doubles game - Status: spec created
-3. **Manage the roster** - Add new players to the system - Status: needs spec
+3. **Manage the roster** - Add new players to the system - Status: spec created
 
 ## v1 Scope
 
