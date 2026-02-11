@@ -1,7 +1,25 @@
 ## Codebase Patterns
 
+**Prisma client import:** `import { prisma } from "../lib/prisma"` (relative from src/). The singleton is at `src/lib/prisma.ts`.
+**Prisma model types:** `import type { Player } from "../generated/prisma/client"` (relative from src/).
+**API routes:** Next.js App Router convention — `app/api/[route]/route.ts` with `export async function GET/POST(req)`.
+
 ---
 
 # Ralph Progress Log
 Started: 2026-02-11
+---
+
+## 2026-02-11 - US-001
+- Initialized Next.js 16 (App Router) with TypeScript and Tailwind CSS
+- Installed Prisma 7 with SQLite via `@prisma/adapter-better-sqlite3` driver adapter
+- Created schema: Player, Match, MatchPlayer models with initial migration
+- Created `src/lib/prisma.ts` singleton using PrismaBetterSqlite3 adapter
+- **Learnings for future iterations:**
+  - Prisma 7 uses new `prisma-client` generator (not `prisma-client-js`), output goes to `src/generated/prisma/` with no index.ts — import from `../generated/prisma/client`
+  - Prisma 7 requires a driver adapter for SQLite: `PrismaBetterSqlite3` from `@prisma/adapter-better-sqlite3`
+  - `PrismaClientOptions` requires either `adapter` or `accelerateUrl` — no direct connection option
+  - `@/*` path alias maps to project root (not `src/`), so use relative imports inside `src/`
+  - DATABASE_URL is `file:./dev.db` (relative to project root); db file lives at project root
+  - `create-next-app` can't run in a non-empty directory — create in temp dir and copy files over
 ---

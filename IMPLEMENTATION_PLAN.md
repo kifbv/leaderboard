@@ -19,12 +19,11 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 ### Phase 1: Project Setup & Schema
 
-- **US-001: Initialize Next.js project with Prisma and SQLite**
-  - Create Next.js app with TypeScript, configure Prisma with SQLite
-  - Define Player model (id, name, eloRating default 1000, wins default 0, losses default 0, createdAt)
-  - Define Match model with type (SINGLES/DOUBLES), createdAt, and MatchPlayer join table to support both singles and doubles (4 players per match)
-  - Run initial migration
-  - Source: see-the-standings.md US-001
+- **US-001: Initialize Next.js project with Prisma and SQLite** ✅ DONE
+  - Next.js 16, TypeScript, Tailwind CSS, App Router
+  - Prisma 7 with SQLite via `@prisma/adapter-better-sqlite3` driver adapter
+  - Player, Match, MatchPlayer models with initial migration
+  - Note: Prisma 7 requires driver adapter; `@/*` alias maps to root not src/
 
 ### Phase 2: Seed Data & Leaderboard Backend
 

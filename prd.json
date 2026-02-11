@@ -17,7 +17,7 @@
       ],
       "category": "setup",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "dependsOn": [],
       "notes": "Design Match schema to support both singles (2 players) and doubles (4 players) via a MatchPlayer join table upfront."
     },
