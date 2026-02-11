@@ -229,7 +229,7 @@
       ],
       "category": "admin",
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-011"],
       "notes": ""
     }

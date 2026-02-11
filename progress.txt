@@ -160,3 +160,14 @@ Started: 2026-02-11
   - Prisma with SQLite provider does NOT support `mode: "insensitive"` in string filters — use application-level lowercase comparison instead: `players.find(p => p.name.toLowerCase() === trimmedName.toLowerCase())`
   - Dynamic route params in Next.js App Router are `Promise<{ param: string }>` — must `await params` before destructuring
 ---
+
+## 2026-02-11 - US-012
+- Created `src/app/admin/[secret]/page.tsx` — server component that validates secret via `getAdminSecret()` and calls `notFound()` for wrong/unset secret; fetches players alphabetically and passes to client form
+- Created `src/app/admin/[secret]/AdminRosterForm.tsx` — client component with add-player form (inline error/success messages, no page reload) and player list; new players sorted into the list client-side
+- Wrong secret path triggers Next.js `notFound()` which renders the app's 404 page
+- Files changed: `src/app/admin/[secret]/page.tsx`, `src/app/admin/[secret]/AdminRosterForm.tsx`, `prd.json`
+- **Learnings for future iterations:**
+  - For page-level auth with `notFound()`: import from `next/navigation`, call it directly in the server component — no need for middleware
+  - After adding a player via API, sort the new list client-side with `localeCompare` to keep alphabetical order without a round-trip
+  - Disable the "Add Player" button when `name.trim().length === 0` for fast feedback; clear error/success on input change
+---

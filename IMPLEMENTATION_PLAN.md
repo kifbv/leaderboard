@@ -104,10 +104,11 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - Note: SQLite doesn't support Prisma `mode: "insensitive"` — use app-level lowercase comparison
   - Source: manage-the-roster.md US-002 + US-003
 
-- **US-012: Build admin roster management UI**
+- **US-012: Build admin roster management UI** ✅ DONE
   - Page at /admin/[secret] showing player list + add player form
   - Inline error messages, no full page reload on add
-  - 404 for wrong secret, mobile-first
+  - Wrong secret calls `notFound()` → renders app 404 page
+  - New players sorted into list client-side with `localeCompare`
   - Source: manage-the-roster.md US-004
 
 ## Notes
