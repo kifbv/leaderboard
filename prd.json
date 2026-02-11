@@ -70,7 +70,7 @@
       ],
       "category": "leaderboard",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-003"],
       "notes": "Use Next.js App Router with server components. Fetches data on each page load (no caching). Include a basic app layout shell with navigation link to the Log Match page (/log-match)."
     },

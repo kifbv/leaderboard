@@ -41,11 +41,12 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 ### Phase 3: Leaderboard UI
 
-- **US-004: Build leaderboard page**
+- **US-004: Build leaderboard page** ✅ DONE
   - Landing page (/) with server component showing ranked player list
   - Columns: rank, name, ELO, wins, losses, win rate %
   - Include basic app layout shell with navigation (link to "Log Match" page)
   - Mobile-first (375px), empty state when no players
+  - Note: ESLint immutability rule — use reduce not let+map for rank computation
   - Source: see-the-standings.md US-003
 
 ### Phase 4: ELO Calculation & Match Backend

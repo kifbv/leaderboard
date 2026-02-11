@@ -5,6 +5,9 @@
 **API routes:** Next.js App Router convention — `app/api/[route]/route.ts` with `export async function GET/POST(req)`.
 **Prisma 7 seed config:** Seed command goes in `prisma.config.ts` under `migrations.seed`, NOT in `package.json`. Use `tsx prisma/seed.ts` with `tsx` installed as devDependency.
 **Seed script pattern:** Import PrismaClient and adapter directly (not the lib/prisma singleton) — the singleton uses globalThis for hot-reload which doesn't apply in scripts.
+**Tailwind v4:** CSS file uses `@import "tailwindcss"` (not the v3 directives). No `tailwind.config.ts` needed.
+**ESLint immutability:** react-hooks/immutability rule flags `let` variable reassignment inside render scope. Use `reduce` instead of mutation inside `.map()` callbacks.
+**Server components + data fetching:** Use `export const dynamic = "force-dynamic"` to prevent caching; query Prisma directly rather than making HTTP calls to API routes.
 
 ---
 
@@ -37,6 +40,18 @@ Started: 2026-02-11
   - Prisma 7 reads seed command from `prisma.config.ts` → `migrations.seed`, not `package.json`
   - Use `tsx` (not `ts-node`) for TypeScript seed scripts — simpler, works with ESM
   - Seed scripts should create their own PrismaClient (not import the Next.js singleton) to avoid globalThis issues
+---
+
+## 2026-02-11 - US-004
+- Created `src/app/globals.css` with Tailwind v4 `@import "tailwindcss"` directive
+- Created `src/app/layout.tsx` — app shell with nav bar (Leaderboard title + "Log Match" link)
+- Created `src/app/page.tsx` — server component fetching players directly from Prisma, computing rank (ties share rank) and winRate, showing table with rank/name/ELO/W/L/Win%; empty state "No players yet"
+- Files changed: `src/app/globals.css`, `src/app/layout.tsx`, `src/app/page.tsx`
+- **Learnings for future iterations:**
+  - Tailwind v4 uses `@import "tailwindcss"` in CSS (not `@tailwind base/components/utilities`)
+  - ESLint react-hooks/immutability rule flags `let` reassignment inside render — use `reduce` instead of `let rank = 1` + `.map()` mutation
+  - Next.js App Router server components should use `export const dynamic = "force-dynamic"` to opt out of caching when fetching data that changes per request
+  - Server components can query Prisma directly — no need for an HTTP round-trip to the API route
 ---
 
 ## 2026-02-11 - US-003
