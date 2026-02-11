@@ -91,10 +91,9 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 ### Phase 6: Admin / Roster Management
 
-- **US-010: Set up admin secret and environment config**
-  - ADMIN_SECRET env var (minimum 16 chars)
-  - .env.example with placeholder
-  - Admin routes return 404 when secret not set or wrong
+- **US-010: Set up admin secret and environment config** ✅ DONE
+  - `ADMIN_SECRET` added to `.env` (32-char value); `.env.example` created with placeholder
+  - `src/lib/adminSecret.ts`: `validateAdminSecret(secret)` returns 404 response when unset/wrong, null when valid
   - Source: manage-the-roster.md US-001
 
 - **US-011: Create admin player API endpoints**

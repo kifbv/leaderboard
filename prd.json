@@ -186,7 +186,7 @@
       ],
       "category": "admin",
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-001"],
       "notes": "Admin routes return 404 (not 403) for wrong secrets to avoid revealing the path exists."
     },

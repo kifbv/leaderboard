@@ -135,3 +135,15 @@ Started: 2026-02-11
   - TypeScript discriminated union (`type: "SINGLES" | "DOUBLES"`) enables narrowing result type in JSX without casts
   - `new Set(ids.filter(Boolean)).size === ids.length` is a clean distinctness check for arrays where some may be empty strings
 ---
+
+## 2026-02-11 - US-010
+- Added `ADMIN_SECRET` env var to `.env` with a 32-char placeholder value
+- Created `.env.example` documenting both `DATABASE_URL` and `ADMIN_SECRET` with placeholders
+- Created `src/lib/adminSecret.ts` with `getAdminSecret()` and `validateAdminSecret(secret)` helpers
+- `validateAdminSecret` returns a 404 NextResponse when secret is unset or doesn't match (returns null when valid)
+- Files changed: `.env` (not committed — gitignored), `.env.example`, `src/lib/adminSecret.ts`
+- **Learnings for future iterations:**
+  - `.env` is gitignored; only `.env.example` gets committed — that's the right pattern for secrets
+  - Admin routes return 404 (not 403) so attackers can't distinguish wrong-secret from not-found
+  - `validateAdminSecret` returns response-or-null: `const err = validateAdminSecret(secret); if (err) return err;`
+---
