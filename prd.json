@@ -137,6 +137,7 @@
         "User selects match type (Singles selected by default)",
         "Two player dropdowns allow selecting Player 1 and Player 2 from all registered players",
         "A player cannot be selected for both slots simultaneously",
+        "Submit action is disabled until both players are selected",
         "User taps one of two clearly labeled buttons to indicate the winner",
         "On success, a confirmation is shown with the ELO changes (e.g., '+18 / -18')",
         "Form resets after successful submission so another match can be logged immediately",
@@ -149,7 +150,7 @@
       "priority": 8,
       "passes": false,
       "dependsOn": ["US-004", "US-006"],
-      "notes": "Needs navigation from leaderboard page. Submit action disabled until both players selected."
+      "notes": "Needs navigation from leaderboard page."
     },
     {
       "id": "US-009",
@@ -159,8 +160,9 @@
         "When 'Doubles' match type is selected, the form shows Team 1 (two player selects) and Team 2 (two player selects)",
         "No player can appear in more than one slot",
         "User taps one of two buttons to indicate the winning team",
+        "Submit action is disabled until all four players are selected",
         "On success, a confirmation is shown with each player's ELO change",
-        "Form resets after successful submission",
+        "Form resets after successful submission so another match can be logged immediately",
         "Mobile-first layout: comfortably usable on a 375px-wide screen",
         "Typecheck passes",
         "Verify in browser"
@@ -196,6 +198,7 @@
         "POST /api/admin/[secret]/players accepts { name: string }",
         "Returns 201 with the created player object (id, name, eloRating, wins, losses)",
         "Player is created with eloRating 1000, wins 0, losses 0",
+        "Player names are trimmed of whitespace before saving",
         "Returns 400 if name is empty or only whitespace",
         "Returns 409 if a player with that exact name already exists (case-insensitive check)",
         "Returns 404 if the secret segment does not match ADMIN_SECRET",

@@ -9,8 +9,9 @@ Ping Pong Leaderboard — a mobile-first web app for recording office ping pong 
 
 ## Current State
 
-- Greenfield: no source code exists yet
+- Greenfield: `src/` directory exists but is empty — no source code yet
 - Specs complete for all 3 features: See the Standings, Record a Match, Manage the Roster
+- Implementation plan and prd.json created; no stories started
 
 ## Tasks
 
@@ -72,7 +73,8 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 - **US-008: Build singles match logging UI**
   - "Log Match" page accessible from navigation
-  - Singles selected by default, two player dropdowns (no duplicate selection)
+  - Singles selected by default, two player dropdowns (no duplicate selection, sorted alphabetically)
+  - Submit disabled until both players selected
   - Winner buttons, success confirmation with ELO delta
   - Form resets after submission, mobile-first
   - Source: record-a-match.md US-004
@@ -81,7 +83,7 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - Doubles toggle shows Team 1 / Team 2 with two selects each
   - No player duplication across any slot
   - Winner team buttons, success confirmation with per-player ELO delta
-  - Mobile-first
+  - Form resets after submission, mobile-first
   - Source: record-a-match.md US-005
 
 ### Phase 6: Admin / Roster Management
@@ -96,6 +98,7 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - POST /api/admin/[secret]/players — create player (name validation, 409 on duplicate, case-insensitive)
   - GET /api/admin/[secret]/players — list all players alphabetically
   - Both return 404 for wrong secret
+  - Player names trimmed of whitespace before saving
   - Source: manage-the-roster.md US-002 + US-003
 
 - **US-012: Build admin roster management UI**
