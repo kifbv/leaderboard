@@ -92,3 +92,17 @@ Started: 2026-02-11
   - Fetch both players with `findMany({ where: { id: { in: [id1, id2] } } })` to validate existence in a single query
   - MatchPlayer `role` field: "winner" / "loser" for singles; this extends naturally to doubles roles
 ---
+
+## 2026-02-11 - US-007
+- Extended POST /api/matches to handle `{ type: "DOUBLES", winnerTeam: [id, id], loserTeam: [id, id] }`
+- Validates arrays of exactly 2 IDs each, all 4 IDs must be distinct numbers, all must exist in DB
+- Team effective rating = average of two players' ratings; ELO delta computed from team averages
+- Same delta applied uniformly: winners +delta, losers -delta (all 4 in one Prisma transaction)
+- Creates Match + 4 MatchPlayer records (2 "winner", 2 "loser") atomically
+- Returns 201 with matchId, type, winnerTeam/loserTeam arrays each with id, name, oldRating, newRating, delta
+- Files changed: `src/app/api/matches/route.ts`, `prd.json`
+- **Learnings for future iterations:**
+  - Avoid destructuring unused variables from calculateElo — ESLint no-unused-vars warns on them; only destructure what you use
+  - `for...of` loop over player IDs for batch player updates inside a transaction is clean and avoids Promise.all complexity
+  - Doubles delta = `newWinnerAvg - winnerAvg` (positive); losers get `-delta`; individual player new ratings = `oldRating + delta`
+---

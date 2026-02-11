@@ -124,7 +124,7 @@
       ],
       "category": "match-recording",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-006"],
       "notes": "Extends the existing POST /api/matches endpoint. Team effective rating = average of two players' ratings."
     },

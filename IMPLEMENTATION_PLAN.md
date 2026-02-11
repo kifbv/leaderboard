@@ -63,7 +63,7 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - Return match with old/new ratings
   - Source: record-a-match.md US-002
 
-- **US-007: Create doubles match recording API**
+- **US-007: Create doubles match recording API** ✅ DONE
   - POST /api/matches with { type: "DOUBLES", winnerTeam: [id, id], loserTeam: [id, id] }
   - Validate 4 distinct player IDs
   - Team ELO = average of players; same delta for all 4 players
