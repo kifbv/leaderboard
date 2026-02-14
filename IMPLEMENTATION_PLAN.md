@@ -115,62 +115,92 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
 
 All functionality is complete. This phase restyles the UI to match the design references in `designs/`.
 
+**Current state:** All pages use light-mode styling (bg-gray-50, white cards, gray borders, blue-600 accents). Layout has a light nav bar in layout.tsx. Leaderboard uses an HTML `<table>`. Log Match uses stacked dropdowns with gray labels. No custom fonts.
+
+**Target state:** Dark mode throughout, Lexend + Material Symbols fonts, primary blue #135bec, podium top-3, card rows, modal-style log match.
+
+**Tailwind v4 note:** This project uses Tailwind v4 (`@import "tailwindcss"` in globals.css, `@tailwindcss/postcss` in postcss.config.mjs). There is no `tailwind.config.js`. Custom theme tokens must be defined using `@theme {}` block in `globals.css`.
+
 - [ ] **US-013: Set up global dark theme with Lexend font and color tokens**
-  - Import Lexend + Material Symbols fonts in globals.css
-  - Define Tailwind theme tokens: primary (#135bec), bg-dark (#0b121e), card-dark (#0d1625)
-  - Update layout.tsx: dark mode, Lexend font, remove old light nav bar
-  - Source: designs/global-leaderboard.html
+  - **globals.css:** Add `@theme {}` block with custom colors: `--color-primary: #135bec`, `--color-background-dark: #0b121e`, `--color-card-dark: #0d1625`, `--color-background-light: #f6f6f8`
+  - **globals.css:** Import Google Fonts (Lexend 100..900, Material Symbols Outlined) via `@import url(...)` at top of file
+  - **globals.css:** Set `body { font-family: 'Lexend', sans-serif; }` base style
+  - **layout.tsx:** Add `className="dark"` to `<html>` tag, set `<body>` to `bg-background-dark text-white min-h-screen`
+  - **layout.tsx:** Remove the existing `<nav>` bar entirely (pages will handle their own headers)
+  - **layout.tsx:** Wrap `{children}` in `<div className="max-w-md mx-auto">` for mobile-first centering
+  - Files: `src/app/globals.css`, `src/app/layout.tsx`
+  - Source: designs/global-leaderboard.html, designs/log-match-result.html
 
 - [ ] **US-014: Restyle leaderboard — sticky header and floating action button**
-  - Sticky header with blur backdrop, sports_tennis icon, "TGSB Leaderboard" title
-  - Floating "Log Match" FAB button (bottom-right, primary color, rounded-full with shadow)
-  - No search bar (out of v1 scope), no bottom nav (out of v1 scope)
+  - **Header:** Replace `<h1>Standings</h1>` with sticky header: `sticky top-0 z-30 bg-background-dark/80 backdrop-blur-lg px-6 pt-10 pb-4`
+  - **Header content:** Flex row with Material Symbol `sports_tennis` icon (text-primary text-4xl) + "TGSB Leaderboard" h1 (text-2xl font-bold)
+  - **FAB:** Add fixed-position "Log Match" button: `fixed bottom-8 right-6 px-8 py-4 bg-primary text-white rounded-full shadow-[0_8px_30px_rgb(19,91,236,0.4)]` linking to `/log-match`
+  - **No search bar** (out of v1 scope), **no bottom nav** (out of v1 scope)
+  - Files: `src/app/page.tsx`
   - Source: designs/global-leaderboard.html
 
 - [ ] **US-015: Restyle leaderboard — top-3 podium layout**
-  - 1st place centered/larger with primary border and glow, "1st" badge
-  - 2nd place left with slate border, "2nd" badge
-  - 3rd place right with bronze border, "3rd" badge
-  - Initials circles (not avatar images — out of v1 scope)
-  - Each: name, ELO in primary, W-L subtitle
-  - Handle <3 players gracefully
+  - **Layout:** Flex row with `items-end justify-center gap-4`, order: 2nd (left) → 1st (center, raised with -mt-4) → 3rd (right)
+  - **1st place:** w-20 h-20 circle, border-4 border-primary, box-shadow glow `shadow-[0_0_20px_rgba(19,91,236,0.3)]`, "1st" badge in primary bg
+  - **2nd place:** w-16 h-16 circle, border-2 border-slate-700, "2nd" badge in slate-600 bg
+  - **3rd place:** w-16 h-16 circle, border-2 border-[#b87333]/50, "3rd" badge in [#b87333]/80 bg
+  - **Avatar circles:** Show player initials (first letter of name) with deterministic bg color (hash name to pick from palette), not images
+  - **Stats below each:** Name (truncated, text-xs for 2nd/3rd, text-sm for 1st), ELO in primary color, "XW - YL" in text-slate-500 uppercase
+  - **Edge case:** If <3 players, only show the available positions; if 0–1 players, skip podium entirely
+  - Files: `src/app/page.tsx`
   - Source: designs/global-leaderboard.html
 
 - [ ] **US-016: Restyle leaderboard — card rows for 4th+ players**
-  - Replace HTML table with card-style rows per design
-  - Each card: rank number, initials avatar circle, name, "XW - YL · Z% Win", ELO right-aligned in primary
-  - Dark card background (#0d1625), rounded-2xl, hover state
-  - Update empty state for dark mode
+  - **Remove** existing `<table>` markup
+  - **Each card:** `flex items-center gap-4 bg-card-dark p-4 rounded-2xl` with hover: `hover:bg-slate-800/40`
+  - **Card content:** Rank number (text-sm font-bold text-slate-400 w-4) → Initials avatar circle (w-12 h-12 rounded-full) → Name + subtitle in flex-1 → ELO right-aligned in primary
+  - **Subtitle format:** `{wins}W - {losses}L · {winRate}% Win` in text-[10px] text-slate-500 uppercase
+  - **Empty state:** Update to dark mode styling (text-slate-500)
+  - Files: `src/app/page.tsx`
   - Source: designs/global-leaderboard.html
 
 - [ ] **US-017: Restyle log match page — modal layout, header, and dark theme**
-  - Modal-style full screen with close (X) button linking to /
-  - Centered "Log Match" title in header
-  - Dark mode background, Lexend font
-  - Restyle Singles/Doubles toggle for dark mode
+  - **Container:** Full-screen modal style: `min-h-screen bg-background-dark flex flex-col`
+  - **Header:** Sticky with blur, 3-column layout: close (X) button left (Material Symbol `close`, links to `/`) → "Log Match" title center → empty spacer right
+  - **Header styling:** `border-b border-slate-800`, bg-background-dark/80 backdrop-blur-md
+  - **Singles/Doubles toggle:** Restyle: active tab = `bg-primary text-white`, inactive = `bg-slate-800 text-slate-400`
+  - Files: `src/app/log-match/LogMatchForm.tsx`, `src/app/log-match/page.tsx`
   - Source: designs/log-match-result.html
 
 - [ ] **US-018: Restyle log match page — dropdowns and "Who played?" section**
-  - "Who played?" heading with subtitle, centered
-  - 2-column grid player dropdowns with primary color uppercase labels
-  - Dark-styled selects: dark bg, slate borders, rounded-xl, custom chevron
+  - **Heading section:** Centered "Who played?" (text-2xl font-bold) + "Select the match participants." subtitle (text-slate-500 text-sm)
+  - **Grid layout:** `grid grid-cols-2 gap-4` for Player 1 / Player 2 in singles mode
+  - **Labels:** `text-[10px] font-bold uppercase tracking-widest text-primary` (e.g. "PLAYER 1", "PLAYER 2")
+  - **Select elements:** `bg-slate-900 border border-slate-800 rounded-xl py-3 px-3 text-sm text-white`, custom chevron SVG via CSS `background-image`
+  - **Doubles mode:** Similar grid but 2 rows per team, with "Team 1" / "Team 2" section headers
+  - Files: `src/app/log-match/LogMatchForm.tsx`
   - Source: designs/log-match-result.html
 
 - [ ] **US-019: Restyle log match page — winner buttons and feedback**
-  - Restyle winner selection buttons for dark mode (primary color, rounded, shadow)
-  - Restyle success/error feedback for dark mode
+  - **Winner buttons:** `bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20`
+  - **Disabled state:** `bg-slate-800 text-slate-500 cursor-not-allowed` (replace gray-300)
+  - **Success feedback:** `bg-green-900/30 border border-green-800 text-green-400` (dark-mode green)
+  - **Error feedback:** `bg-red-900/30 border border-red-800 text-red-400` (dark-mode red)
+  - **Loading text:** `text-slate-400`
+  - Files: `src/app/log-match/LogMatchForm.tsx`
   - Source: designs/log-match-result.html
 
 - [ ] **US-020: Restyle admin page for dark mode consistency**
-  - No design reference — inherit global dark theme
-  - Dark inputs, primary buttons, card-dark player list, white text
+  - **No design reference** — inherit global dark theme for consistency
+  - **Heading:** White text (inherits from body)
+  - **Form input:** `bg-slate-900 border border-slate-800 text-white rounded-xl px-3 py-2 focus:ring-2 focus:ring-primary/50`
+  - **Add button:** `bg-primary text-white hover:bg-primary/90 rounded-xl`
+  - **Player list:** `bg-card-dark rounded-2xl divide-slate-800` with white names, slate-400 ELO text
+  - **Empty state:** `text-slate-500`
+  - **Error/success messages:** Same dark-mode styling as log match page
+  - Files: `src/app/admin/[secret]/AdminRosterForm.tsx`
   - Source: none (consistency pass)
 
 - [ ] **US-021: Final QA — build, lint, typecheck, visual verification**
   - `npx tsc --noEmit` passes
   - `npm run build` passes
   - `npm run lint` passes
-  - Visual check at 375px for all three pages
+  - Visual check at 375px for all three pages (leaderboard, log match, admin)
 
 ## Notes
 
@@ -179,3 +209,6 @@ All functionality is complete. This phase restyles the UI to match the design re
 - Match model uses MatchPlayer join table to support both singles (2 players) and doubles (4 players)
 - ELO is stored as integer, win rate is computed at query time
 - Player dropdowns sorted alphabetically per spec
+- **Tailwind v4:** Custom theme tokens use `@theme {}` in globals.css, not a JS config file
+- **Fonts:** Lexend from Google Fonts, Material Symbols Outlined for icons
+- **No functionality changes** — all stories in Phase 7 are styling-only
