@@ -50,14 +50,14 @@ export default function AdminRosterForm({
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Roster Management</h1>
+    <div className="min-h-screen bg-background-dark px-6 py-10">
+      <h1 className="text-2xl font-bold mb-8">Roster Management</h1>
 
       {/* Add player form */}
       <form onSubmit={handleAddPlayer} className="mb-8">
         <label
           htmlFor="player-name"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium mb-2"
         >
           Add Player
         </label>
@@ -72,40 +72,34 @@ export default function AdminRosterForm({
               setSuccess(null);
             }}
             placeholder="Player name"
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 bg-slate-900 border border-slate-800 text-white rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-slate-500"
           />
           <button
             type="submit"
             disabled={loading || name.trim().length === 0}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg text-base disabled:opacity-50 hover:bg-blue-700 active:bg-blue-800 transition-colors"
+            className="px-4 py-2 bg-primary text-white font-medium rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? "Adding…" : "Add Player"}
           </button>
         </div>
 
-        {error && (
-          <p className="mt-2 text-sm text-red-600">{error}</p>
-        )}
-        {success && (
-          <p className="mt-2 text-sm text-green-600">{success}</p>
-        )}
+        {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+        {success && <p className="mt-2 text-sm text-green-400">{success}</p>}
       </form>
 
       {/* Player list */}
-      <h2 className="text-lg font-semibold mb-3">
-        Players ({players.length})
-      </h2>
+      <h2 className="text-lg font-semibold mb-3">Players ({players.length})</h2>
       {players.length === 0 ? (
-        <p className="text-gray-500 text-sm">No players yet.</p>
+        <p className="text-slate-500 text-sm">No players yet.</p>
       ) : (
-        <ul className="divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden">
+        <ul className="bg-card-dark rounded-2xl divide-y divide-slate-800 overflow-hidden">
           {players.map((player) => (
             <li
               key={player.id}
-              className="flex items-center justify-between px-4 py-3 bg-white"
+              className="flex items-center justify-between px-4 py-3"
             >
-              <span className="font-medium text-gray-900">{player.name}</span>
-              <span className="text-sm text-gray-500">
+              <span className="font-medium">{player.name}</span>
+              <span className="text-sm text-slate-400">
                 ELO {player.eloRating}
               </span>
             </li>
