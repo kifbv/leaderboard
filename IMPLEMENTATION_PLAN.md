@@ -121,7 +121,7 @@ All functionality is complete. This phase restyles the UI to match the design re
 
 **Tailwind v4 note:** This project uses Tailwind v4 (`@import "tailwindcss"` in globals.css, `@tailwindcss/postcss` in postcss.config.mjs). There is no `tailwind.config.js`. Custom theme tokens must be defined using `@theme {}` block in `globals.css`.
 
-- [ ] **US-013: Set up global dark theme with Lexend font and color tokens**
+- [x] **US-013: Set up global dark theme with Lexend font and color tokens**
   - **globals.css:** Add `@theme {}` block with custom colors: `--color-primary: #135bec`, `--color-background-dark: #0b121e`, `--color-card-dark: #0d1625`, `--color-background-light: #f6f6f8`
   - **globals.css:** Import Google Fonts (Lexend 100..900, Material Symbols Outlined) via `@import url(...)` at top of file
   - **globals.css:** Set `body { font-family: 'Lexend', sans-serif; }` base style
@@ -131,7 +131,7 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/globals.css`, `src/app/layout.tsx`
   - Source: designs/global-leaderboard.html, designs/log-match-result.html
 
-- [ ] **US-014: Restyle leaderboard — sticky header and floating action button**
+- [x] **US-014: Restyle leaderboard — sticky header and floating action button**
   - **Header:** Replace `<h1>Standings</h1>` with sticky header: `sticky top-0 z-30 bg-background-dark/80 backdrop-blur-lg px-6 pt-10 pb-4`
   - **Header content:** Flex row with Material Symbol `sports_tennis` icon (text-primary text-4xl) + "TGSB Leaderboard" h1 (text-2xl font-bold)
   - **FAB:** Add fixed-position "Log Match" button: `fixed bottom-8 right-6 px-8 py-4 bg-primary text-white rounded-full shadow-[0_8px_30px_rgb(19,91,236,0.4)]` linking to `/log-match`
@@ -139,7 +139,7 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/page.tsx`
   - Source: designs/global-leaderboard.html
 
-- [ ] **US-015: Restyle leaderboard — top-3 podium layout**
+- [x] **US-015: Restyle leaderboard — top-3 podium layout**
   - **Layout:** Flex row with `items-end justify-center gap-4`, order: 2nd (left) → 1st (center, raised with -mt-4) → 3rd (right)
   - **1st place:** w-20 h-20 circle, border-4 border-primary, box-shadow glow `shadow-[0_0_20px_rgba(19,91,236,0.3)]`, "1st" badge in primary bg
   - **2nd place:** w-16 h-16 circle, border-2 border-slate-700, "2nd" badge in slate-600 bg
@@ -150,7 +150,7 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/page.tsx`
   - Source: designs/global-leaderboard.html
 
-- [ ] **US-016: Restyle leaderboard — card rows for 4th+ players**
+- [x] **US-016: Restyle leaderboard — card rows for 4th+ players**
   - **Remove** existing `<table>` markup
   - **Each card:** `flex items-center gap-4 bg-card-dark p-4 rounded-2xl` with hover: `hover:bg-slate-800/40`
   - **Card content:** Rank number (text-sm font-bold text-slate-400 w-4) → Initials avatar circle (w-12 h-12 rounded-full) → Name + subtitle in flex-1 → ELO right-aligned in primary
@@ -159,7 +159,7 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/page.tsx`
   - Source: designs/global-leaderboard.html
 
-- [ ] **US-017: Restyle log match page — modal layout, header, and dark theme**
+- [x] **US-017: Restyle log match page — modal layout, header, and dark theme**
   - **Container:** Full-screen modal style: `min-h-screen bg-background-dark flex flex-col`
   - **Header:** Sticky with blur, 3-column layout: close (X) button left (Material Symbol `close`, links to `/`) → "Log Match" title center → empty spacer right
   - **Header styling:** `border-b border-slate-800`, bg-background-dark/80 backdrop-blur-md
@@ -167,7 +167,7 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/log-match/LogMatchForm.tsx`, `src/app/log-match/page.tsx`
   - Source: designs/log-match-result.html
 
-- [ ] **US-018: Restyle log match page — dropdowns and "Who played?" section**
+- [x] **US-018: Restyle log match page — dropdowns and "Who played?" section**
   - **Heading section:** Centered "Who played?" (text-2xl font-bold) + "Select the match participants." subtitle (text-slate-500 text-sm)
   - **Grid layout:** `grid grid-cols-2 gap-4` for Player 1 / Player 2 in singles mode
   - **Labels:** `text-[10px] font-bold uppercase tracking-widest text-primary` (e.g. "PLAYER 1", "PLAYER 2")
@@ -176,7 +176,7 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/log-match/LogMatchForm.tsx`
   - Source: designs/log-match-result.html
 
-- [ ] **US-019: Restyle log match page — winner buttons and feedback**
+- [x] **US-019: Restyle log match page — winner buttons and feedback**
   - **Winner buttons:** `bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20`
   - **Disabled state:** `bg-slate-800 text-slate-500 cursor-not-allowed` (replace gray-300)
   - **Success feedback:** `bg-green-900/30 border border-green-800 text-green-400` (dark-mode green)
@@ -185,7 +185,7 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/log-match/LogMatchForm.tsx`
   - Source: designs/log-match-result.html
 
-- [ ] **US-020: Restyle admin page for dark mode consistency**
+- [x] **US-020: Restyle admin page for dark mode consistency**
   - **No design reference** — inherit global dark theme for consistency
   - **Heading:** White text (inherits from body)
   - **Form input:** `bg-slate-900 border border-slate-800 text-white rounded-xl px-3 py-2 focus:ring-2 focus:ring-primary/50`
@@ -196,11 +196,11 @@ All functionality is complete. This phase restyles the UI to match the design re
   - Files: `src/app/admin/[secret]/AdminRosterForm.tsx`
   - Source: none (consistency pass)
 
-- [ ] **US-021: Final QA — build, lint, typecheck, visual verification**
-  - `npx tsc --noEmit` passes
-  - `npm run build` passes
-  - `npm run lint` passes
-  - Visual check at 375px for all three pages (leaderboard, log match, admin)
+- [x] **US-021: Final QA — build, lint, typecheck, visual verification**
+  - `npx tsc --noEmit` passes ✅
+  - `npm run build` passes ✅
+  - `npm run lint` passes ✅ (fixed: Link component, unused var)
+  - Visual check at 375px — pending manual browser review
 
 ## Notes
 

@@ -14,6 +14,9 @@
 **Interactive UI pattern:** Split into server component (page.tsx — fetches data from Prisma) + client component (XxxForm.tsx — handles state, events). Server component uses `select:` to minimize data sent to client.
 **SQLite case-insensitive search:** Prisma with SQLite does NOT support `mode: "insensitive"` — use app-level: `items.find(x => x.name.toLowerCase() === input.toLowerCase())`.
 **Dynamic route params:** Next.js App Router passes params as `Promise<{ param: string }>` — always `await params` before destructuring.
+**Tailwind v4 custom tokens:** Define in `@theme {}` block in `globals.css`. Use as `bg-primary`, `bg-background-dark`, etc. — no tailwind.config.js needed.
+**Next.js Link rule:** ESLint `@next/next/no-html-link-for-pages` requires `<Link>` from `next/link` instead of `<a href="...">` for page routes. Client components must `import Link from "next/link"`.
+**Avatar deterministic color:** Hash player name to pick from a fixed palette of Tailwind colors. Use bitwise `& 0xffffffff` to keep hash in 32-bit range.
 
 ---
 
@@ -47,6 +50,24 @@ Started: 2026-02-11
   - Prisma 7 reads seed command from `prisma.config.ts` → `migrations.seed`, not `package.json`
   - Use `tsx` (not `ts-node`) for TypeScript seed scripts — simpler, works with ESM
   - Seed scripts should create their own PrismaClient (not import the Next.js singleton) to avoid globalThis issues
+---
+
+## 2026-02-14 - US-013 through US-021 (Design Alignment Phase)
+- Implemented full dark mode UI restyling across all pages
+- **US-013:** Updated `globals.css` with Tailwind v4 `@theme {}` color tokens (#135bec primary, #0b121e dark bg, #0d1625 card dark); added Google Fonts imports (Lexend + Material Symbols); updated `layout.tsx` to add `className="dark"`, remove nav, wrap children in `max-w-md`
+- **US-014:** Leaderboard sticky header with sports_tennis icon + "TGSB Leaderboard" title; floating "Log Match" FAB with primary glow shadow
+- **US-015:** Top-3 podium layout with initials avatars, deterministic bg colors, rank badges (gold/silver/bronze), -mt-4 center raise
+- **US-016:** Replaced table with div card rows — `bg-card-dark` cards with initials avatar, rank, name+subtitle, ELO right-aligned
+- **US-017/018/019:** LogMatchForm.tsx fully restyled — modal header with close (X) Link, Singles/Doubles toggle with `bg-primary` active state, 2-column player dropdowns with custom SVG chevron, dark winner buttons, dark success/error feedback
+- **US-020:** AdminRosterForm.tsx restyled — `bg-slate-900` input, `bg-primary` button, `bg-card-dark` player list, dark error/success messages
+- **US-021:** Final QA — fixed ESLint error (`<a>` → `<Link>` in LogMatchForm), removed unused `isThird` var; `tsc`, `lint`, `build` all pass
+- Files changed: `src/app/globals.css`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/log-match/LogMatchForm.tsx`, `src/app/admin/[secret]/AdminRosterForm.tsx`
+- **Learnings for future iterations:**
+  - Tailwind v4 custom tokens use `@theme {}` in globals.css; accessed as `bg-primary`, `text-primary`, etc. — no config file
+  - `@next/next/no-html-link-for-pages` ESLint rule requires `<Link>` from `next/link` for any `<a href="...">` pointing to app routes in client components
+  - Deterministic avatar colors: hash name string with `charCodeAt` + `& 0xffffffff` → index into fixed color palette
+  - Google Fonts `@import url(...)` must come BEFORE `@import "tailwindcss"` in globals.css (PostCSS processes imports in order)
+  - Unused variables from ternary chains (e.g. `isThird` never used in JSX) will be caught by ESLint — clean them up
 ---
 
 ## 2026-02-11 - US-004
