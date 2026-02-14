@@ -93,11 +93,16 @@ if [ "$MODE" = "update" ]; then
 
   FAILED=0
 
-  # Update ralph.sh
+  # Update ralph.sh (and re-exec if it changed)
   if curl -sfL "$REPO_URL/scripts/ralph.sh" -o "$RALPH_DIR/ralph.sh.tmp"; then
-    mv "$RALPH_DIR/ralph.sh.tmp" "$RALPH_DIR/ralph.sh"
-    chmod +x "$RALPH_DIR/ralph.sh"
-    echo "  Updated ralph.sh"
+    if ! cmp -s "$RALPH_DIR/ralph.sh.tmp" "$RALPH_DIR/ralph.sh"; then
+      mv "$RALPH_DIR/ralph.sh.tmp" "$RALPH_DIR/ralph.sh"
+      chmod +x "$RALPH_DIR/ralph.sh"
+      echo "  Updated ralph.sh (restarting with new version...)"
+      exec "$RALPH_DIR/ralph.sh" update
+    fi
+    rm -f "$RALPH_DIR/ralph.sh.tmp"
+    echo "  ralph.sh is up to date"
   else
     rm -f "$RALPH_DIR/ralph.sh.tmp"
     echo "  Failed to update ralph.sh"
@@ -112,6 +117,20 @@ if [ "$MODE" = "update" ]; then
     else
       rm -f "$RALPH_DIR/${prompt}.md.tmp"
       echo "  Failed to update ${prompt}.md"
+      FAILED=1
+    fi
+  done
+
+  # Update skills
+  SKILLS_DIR="$PROJECT_DIR/.claude/skills"
+  for skill in design-sync discover interview prd prd-to-json; do
+    mkdir -p "$SKILLS_DIR/$skill"
+    if curl -sfL "$REPO_URL/skills/${skill}/SKILL.md" -o "$SKILLS_DIR/$skill/SKILL.md.tmp"; then
+      mv "$SKILLS_DIR/$skill/SKILL.md.tmp" "$SKILLS_DIR/$skill/SKILL.md"
+      echo "  Updated skill: $skill"
+    else
+      rm -f "$SKILLS_DIR/$skill/SKILL.md.tmp"
+      echo "  Failed to update skill: $skill"
       FAILED=1
     fi
   done
