@@ -1,1 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #135bec;
+  --color-background-dark: #0b121e;
+  --color-card-dark: #0d1625;
+  --color-background-light: #f6f6f8;
+}
+
+body {
+  font-family: 'Lexend', sans-serif;
+}
