@@ -322,7 +322,7 @@
       ],
       "category": "design-alignment",
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-013"],
       "notes": "Files: src/app/log-match/LogMatchForm.tsx, src/app/log-match/page.tsx. Ref: designs/log-match-result.html"
     },
@@ -340,7 +340,7 @@
       ],
       "category": "design-alignment",
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-017"],
       "notes": "File: src/app/log-match/LogMatchForm.tsx. Update PlayerSelect sub-component. Ref: designs/log-match-result.html"
     },
@@ -358,7 +358,7 @@
       ],
       "category": "design-alignment",
       "priority": 19,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-018"],
       "notes": "File: src/app/log-match/LogMatchForm.tsx. Ref: designs/log-match-result.html"
     },
