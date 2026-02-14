@@ -9,6 +9,7 @@ You are an autonomous coding agent implementing features for a software project.
 0c. Study `CLAUDE.md` for build/test/lint commands and operational patterns.
 0d. Read `progress.txt` - check the Codebase Patterns section at the top first.
 0e. Read `prd.json` for story status and acceptance criteria.
+0f. If `designs/` contains HTML files, check whether the current story references a design. If so, read the relevant HTML file for layout and styling guidance.
 
 ## Task
 

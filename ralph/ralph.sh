@@ -8,12 +8,14 @@
 #   plan [max]             Phase 3: Gap analysis + task list
 #   plan-work "desc" [max] Scoped planning for a specific work branch
 #   build [max]            Phase 4: Implementation (default)
+#   update                 Update ralph files from upstream
 #   [max]                  Shorthand for build mode
 #
 # Environment variables:
 #   RALPH_MODEL    Model to use (default: opus for plan, sonnet for build)
 #   RALPH_DELAY    Seconds between iterations (default: 3)
 #   PUSH_AFTER_ITERATION  Set to "true" to git push after each iteration
+#   RALPH_UPSTREAM Override upstream URL for update mode
 
 set -e
 
@@ -59,6 +61,10 @@ case "${1:-}" in
     shift
     [[ "${1:-}" =~ ^[0-9]+$ ]] && { MAX_ITERATIONS="$1"; shift; }
     ;;
+  update)
+    MODE="update"
+    shift
+    ;;
   *)
     # If first arg is a number, treat as max_iterations for build mode
     if [[ "${1:-}" =~ ^[0-9]+$ ]]; then
@@ -67,6 +73,61 @@ case "${1:-}" in
     fi
     ;;
 esac
+
+# --- Update mode: fetch latest ralph files from upstream ---
+if [ "$MODE" = "update" ]; then
+  RALPH_DIR="$PROJECT_DIR/ralph"
+  DEFAULT_URL="https://raw.githubusercontent.com/kifbv/kickoff/main"
+
+  # Priority: env var > .ralph-upstream file > hardcoded default
+  if [ -n "${RALPH_UPSTREAM:-}" ]; then
+    REPO_URL="$RALPH_UPSTREAM"
+  elif [ -f "$RALPH_DIR/.ralph-upstream" ]; then
+    REPO_URL=$(cat "$RALPH_DIR/.ralph-upstream")
+  else
+    REPO_URL="$DEFAULT_URL"
+  fi
+
+  echo "Updating ralph files from: $REPO_URL"
+  echo ""
+
+  FAILED=0
+
+  # Update ralph.sh
+  if curl -sfL "$REPO_URL/scripts/ralph.sh" -o "$RALPH_DIR/ralph.sh.tmp"; then
+    mv "$RALPH_DIR/ralph.sh.tmp" "$RALPH_DIR/ralph.sh"
+    chmod +x "$RALPH_DIR/ralph.sh"
+    echo "  Updated ralph.sh"
+  else
+    rm -f "$RALPH_DIR/ralph.sh.tmp"
+    echo "  Failed to update ralph.sh"
+    FAILED=1
+  fi
+
+  # Update prompts
+  for prompt in PROMPT_build PROMPT_plan PROMPT_plan_work PROMPT_discover PROMPT_interview; do
+    if curl -sfL "$REPO_URL/prompts/${prompt}.md" -o "$RALPH_DIR/${prompt}.md.tmp"; then
+      mv "$RALPH_DIR/${prompt}.md.tmp" "$RALPH_DIR/${prompt}.md"
+      echo "  Updated ${prompt}.md"
+    else
+      rm -f "$RALPH_DIR/${prompt}.md.tmp"
+      echo "  Failed to update ${prompt}.md"
+      FAILED=1
+    fi
+  done
+
+  # Create designs/ if missing
+  mkdir -p "$PROJECT_DIR/designs"
+
+  echo ""
+  if [ "$FAILED" -eq 0 ]; then
+    echo "Update complete."
+  else
+    echo "Update completed with errors (some files failed to download)."
+    exit 1
+  fi
+  exit 0
+fi
 
 # Select prompt file based on mode
 case "$MODE" in
