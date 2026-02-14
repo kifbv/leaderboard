@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Log Match Result</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: "Lexend", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100dvh;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25em 1.25em;
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex justify-center">
+<div class="relative w-full max-w-[430px] min-h-screen bg-background-light dark:bg-background-dark flex flex-col shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-800">
+<button class="w-10 h-10 flex items-center justify-start text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<h1 class="text-lg font-semibold tracking-tight">Log Match</h1>
+<div class="w-10"></div>
+</header>
+<main class="flex-1 px-6 py-8 flex flex-col gap-8">
+<div class="flex flex-col gap-4">
+<div class="text-center">
+<h2 class="text-2xl font-bold mb-1">Who played?</h2>
+<p class="text-slate-500 text-sm">Select the match participants.</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Player 1</label>
+<select class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer">
+<option value="">Select Player</option>
+<option>Alex Thompson</option>
+<option>Jordan Lee</option>
+<option>Sarah Chen</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Player 2</label>
+<select class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer">
+<option value="">Select Player</option>
+<option>Alex Thompson</option>
+<option>Jordan Lee</option>
+<option>Sarah Chen</option>
+</select>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-bold uppercase tracking-widest text-slate-500">Set Scores</h3>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-4 relative">
+<div class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl ios-shadow p-2">
+<input class="w-full h-12 text-center bg-transparent border-none rounded-lg text-2xl font-bold focus:ring-0 transition-all text-slate-400 focus:text-slate-900 dark:focus:text-white" placeholder="0" type="number"/>
+</div>
+<div class="shrink-0">
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1 whitespace-nowrap">Set 1</span>
+</div>
+<div class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl ios-shadow p-2">
+<input class="w-full h-12 text-center bg-transparent border-none rounded-lg text-2xl font-bold focus:ring-0 transition-all text-slate-400 focus:text-slate-900 dark:focus:text-white" placeholder="0" type="number"/>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 py-4 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl text-slate-400 hover:text-primary hover:border-primary/50 transition-all group mt-2">
+<span class="material-symbols-outlined text-lg group-hover:scale-110 transition-transform text-slate-500">add_circle</span>
+<span class="text-sm font-semibold">Add Set</span>
+</button>
+</div>
+</main>
+<footer class="p-6 bg-gradient-to-t from-background-light dark:from-background-dark to-transparent">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-5 rounded-2xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-[0.98]">
+<span>Submit Result</span>
+<span class="material-symbols-outlined">send</span>
+</button>
+<p class="text-center text-[10px] text-slate-500 mt-4 uppercase tracking-wider">
+            Rankings will be updated based on set outcomes.
+        </p>
+</footer>
+<div class="h-6 flex justify-center items-end pb-2">
+<div class="w-32 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+</div>
+</div>
+
+</body></html>

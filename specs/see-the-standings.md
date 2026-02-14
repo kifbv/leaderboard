@@ -3,6 +3,33 @@
 ## Overview
 Display the current ELO rankings for all players so that anyone in the office can quickly check who's on top. This is the landing page of the app — the first thing users see when they open it on their phone.
 
+## Design Reference
+- **Stitch Project:** Global Leaderboard (`projects/5408221919024409015`)
+- **Screens:**
+  - Global Leaderboard (`742aab4a3acb405b8f593bed517eaf8a`, Mobile, 390x967)
+- **Local HTML:** `designs/global-leaderboard.html`
+
+### Design Details
+- **Theme:** Dark mode, Lexend font, primary color `#135bec`, background `#0b121e`, card `#0d1625`
+- **Layout:** Top-3 podium (1st centered/larger with glow, 2nd left, 3rd right) with avatar circles and rank badges, followed by a card list for 4th place onwards
+- **Each card row:** rank number, avatar circle, player name, "XW - YL · Z% Win" subtitle, ELO rating right-aligned in primary color
+- **Header:** Sticky with blur backdrop, app title "TGSB Leaderboard" with `sports_tennis` icon, search input below
+- **FAB:** Floating "Log Match" button (primary color, bottom-right, rounded-full with shadow)
+- **Bottom nav:** 4 tabs (Leaderboard, Matches, Leagues, Profile) — only Leaderboard is in v1 scope
+
+### Design vs. Spec Deviations
+The design includes elements beyond v1 scope. Implement these from the design:
+- Top-3 podium layout with rank badges
+- Card-style rows for 4th+ players
+- Floating "Log Match" FAB button (links to match logging)
+- Dark mode styling, Lexend font, primary color scheme
+- Sticky header with app title and icon
+
+Do NOT implement these (out of v1 scope):
+- Search bar (design shows it, spec excludes filtering/searching)
+- Avatar images (no user uploads in v1 — use initials or colored circles)
+- Bottom navigation bar (Matches, Leagues, Profile tabs are out of scope)
+
 ## User Stories
 
 ### US-001: Set up project foundation with database schema
@@ -31,11 +58,16 @@ Display the current ELO rankings for all players so that anyone in the office ca
 **Description:** As an office worker, I want to see a ranked list of players with their stats on my phone so that I can check the standings at a glance.
 
 **Acceptance Criteria:**
-- [ ] Landing page (`/`) displays a table/list of all players
-- [ ] Each row shows: rank, player name, ELO rating, wins, losses, win rate %
+- [ ] Landing page (`/`) displays a leaderboard matching the design in `designs/global-leaderboard.html`
+- [ ] Top-3 players shown in a podium layout (1st centered/larger, 2nd left, 3rd right) with rank badges
+- [ ] Players 4th and below shown in card-style rows: rank, initials avatar, name, W-L + win%, ELO
 - [ ] List is sorted by ELO rating (highest first)
+- [ ] Dark mode styling with Lexend font and primary color `#135bec`
+- [ ] Sticky header with app title and sports icon
+- [ ] Floating "Log Match" button (FAB) linking to match logging page
 - [ ] Mobile-first layout: readable without horizontal scrolling on a 375px-wide screen
 - [ ] Empty state shown when no players exist ("No players yet")
+- [ ] UI matches design reference in `designs/global-leaderboard.html`
 - [ ] `npx tsc --noEmit` passes
 
 ### US-004: Seed database with test players
@@ -73,3 +105,5 @@ Display the current ELO rankings for all players so that anyone in the office ca
 - `npx prisma migrate dev` runs cleanly
 - `npx prisma db seed` populates test data
 - Leaderboard renders correctly on a 375px-wide viewport (manual check)
+- UI matches design reference in `designs/global-leaderboard.html`
+- Verify in browser

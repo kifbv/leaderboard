@@ -3,6 +3,32 @@
 ## Overview
 Allow office workers to quickly log the result of a ping pong game — singles (1v1) or doubles (2v2) — directly from their phone. After submitting, ELO ratings update automatically for all involved players. This is the primary action in the app: the reason users open it after a game.
 
+## Design Reference
+- **Stitch Project:** Global Leaderboard (`projects/5408221919024409015`)
+- **Screens:**
+  - Log Match Result (`62b44798252d41208c099b5aa18db1df`, Mobile, 390x884)
+- **Local HTML:** `designs/log-match-result.html`
+
+### Design Details
+- **Theme:** Dark mode, Lexend font, primary color `#135bec`, background `#101622`
+- **Layout:** Modal-style full screen with close button (X) in header, "Log Match" title centered
+- **"Who played?" section:** 2-column grid with Player 1 and Player 2 dropdowns, labels in primary color uppercase
+- **Score section:** "Set Scores" with number inputs side-by-side per set, "Add Set" dashed button
+- **Footer:** Full-width "Submit Result" primary button with send icon, subtitle text below
+- **Dropdowns:** White/dark bg with rounded-xl, custom chevron, border styling
+
+### Design vs. Spec Deviations
+The design shows set-based scoring which is out of v1 scope. Adapt as follows:
+- Use the overall layout, typography, and color scheme from the design
+- Replace the set scores section with a winner selection (two tappable buttons or similar)
+- Keep the modal-style presentation with close button
+- Keep the 2-column player dropdown layout
+- Keep the "Submit Result" footer button style
+
+Do NOT implement:
+- Set score inputs (v1 only records winner/loser, not scores)
+- "Add Set" button
+
 ## User Stories
 
 ### US-001: Create ELO calculation utility
@@ -42,13 +68,17 @@ Allow office workers to quickly log the result of a ping pong game — singles (
 **Description:** As an office worker, I want to pick two players and tap the winner to log a 1v1 match from my phone.
 
 **Acceptance Criteria:**
-- [ ] A "Log Match" page or modal is accessible from the main navigation
+- [ ] A "Log Match" page accessible from the leaderboard FAB button, styled as modal-like screen per `designs/log-match-result.html`
+- [ ] Header with close button (X) and centered "Log Match" title
 - [ ] User selects match type (Singles selected by default)
-- [ ] Two player dropdowns allow selecting Player 1 and Player 2 from all registered players
+- [ ] "Who played?" section with 2-column grid of Player 1 and Player 2 dropdowns (styled per design)
 - [ ] A player cannot be selected for both slots simultaneously
-- [ ] User taps one of two clearly labeled buttons to indicate the winner (e.g., "Player A won" / "Player B won")
+- [ ] Winner selection via two clearly labeled tappable buttons (replacing the set scores from the design)
+- [ ] Full-width "Submit Result" primary button in footer (styled per design)
 - [ ] On success, a confirmation is shown with the ELO changes (e.g., "+18 / -18")
+- [ ] Dark mode styling with Lexend font and primary color `#135bec`
 - [ ] Mobile-first layout: comfortably usable on a 375px-wide screen
+- [ ] UI matches design reference in `designs/log-match-result.html` (adapted for winner-only recording)
 - [ ] `npx tsc --noEmit` passes
 
 ### US-005: Build doubles match logging UI
@@ -90,3 +120,5 @@ Allow office workers to quickly log the result of a ping pong game — singles (
 - Unit tests pass for ELO calculation (at least 3 scenarios)
 - `POST /api/matches` returns correct ELO deltas for a known input
 - Singles and doubles forms are usable on a 375px-wide viewport (manual check)
+- UI matches design reference in `designs/log-match-result.html`
+- Verify in browser

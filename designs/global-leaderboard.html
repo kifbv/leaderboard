@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Global Leaderboard - Ping Pong Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0b121e",
+                        "card-dark": "#0d1625"
+                    },
+                    fontFamily: {
+                        "display": ["Lexend"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-x-hidden shadow-2xl bg-background-light dark:bg-background-dark">
+<header class="sticky top-0 z-30 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-lg px-6 pt-10 pb-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-4xl font-bold">sports_tennis</span>
+<h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">TGSB Leaderboard</h1>
+</div>
+</div>
+<div class="mt-6">
+<div class="relative w-full">
+<input class="w-full bg-slate-100 dark:bg-slate-800/50 border-none rounded-xl py-3 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-slate-500" placeholder="Search players..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+</div>
+</div>
+</header>
+<section class="px-6 py-4">
+<div class="flex items-end justify-center gap-4 py-4">
+<div class="flex flex-col items-center gap-3 flex-1">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-2 border-slate-300 dark:border-slate-700 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBshNykHUkaV60ONxF8A5kWJ9nVbVdOuLEECq0TY3na3n0oncGYkWaLwl5zZI1be_L_F_YusE9Bu6i3P5YU1COfEx_QsTE8z0PwXHiDM7w3U5Nt_QlHHwy3w0m72UK0zzFrwNYQJ_hTqM7nkTH7NZW1DgLWCwoIn4zW2JDSc7T-ds0ShGkgDzsg8Xzpitu6GBZOIW8PgqP0VIo1h5jnRdKy8jIET-L6hz-3IVFa_BheByunrSmW0ZyP1Oh_lLrdxM_qLu17WawmLd0')"></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-400 dark:bg-slate-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">2nd</div>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold truncate max-w-[80px]">Sam Chen</p>
+<p class="text-sm font-semibold text-primary">1645</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-tighter">22W - 4L</p>
+</div>
+</div>
+<div class="flex flex-col items-center gap-3 flex-1 -mt-4">
+<div class="relative">
+<div class="w-20 h-20 rounded-full border-4 border-primary shadow-[0_0_20px_rgba(19,91,236,0.3)] bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCBP4Q7iFLGIQJsCuOf060fr7zgTcWhg9OyrhKseh1GOBbLQ5D0gVOZVCNXJ_lvbjzq9xvpvyhQbq9pJWQRmRpNn4MXw08nD816ct5oKPtFZz0oasCIFSPlCtA7pHrF0OiIKXz0cRJUhT4SjbEJMzOuGFGHcf4G0Yewl85FFgxf3EhJrX4GIHz8U5YvH09VBddjhyxz1yEG0z-iyBnv2V0f8zIZEBufFmPoYRnmw8QeOudLaqlsx22ZQhTa5vS7D0c66RGCd-5K4jc')"></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">1st</div>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold truncate max-w-[100px]">Alex Rivera</p>
+<p class="text-lg font-bold text-primary">1820</p>
+<p class="text-[10px] text-slate-500 uppercase font-medium tracking-tight">28W - 1L</p>
+</div>
+</div>
+<div class="flex flex-col items-center gap-3 flex-1">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-2 border-[#b87333]/50 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAT2WBHLmis9i17SlmGGqB6ZgB6ktjcq5kAYh0yzaeMiSOyb5hwdUk2nAl94zKEIE5Z1hJOS0JffI4gZxaHuNxnIMerYR2OWvAegrnJ7Yh7eCKThVucIgeSAQH5TEA-Wz48tD3GU7sgmzra20dn8A4DoINldfTsgxF-neAj8bPlFh0gYT9_p8uFce7G-eDdQsxFj_A0jAHk1z6l4Yljv6XMcuXFYhEgIA3TB9zuVDdBV5hba1oOdzYCK390dY7_XRtTtdAIjjVDbCw')"></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#b87333]/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3rd</div>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold truncate max-w-[80px]">Jordan Lee</p>
+<p class="text-sm font-semibold text-primary">1590</p>
+<p class="text-[9px] text-slate-500 uppercase tracking-tighter">19W - 5L</p>
+</div>
+</div>
+</div>
+</section>
+<main class="flex-1 px-6 pb-40">
+<div class="space-y-4 mt-6">
+<div class="flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-2xl border border-transparent dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-all cursor-pointer">
+<span class="w-4 text-sm font-bold text-slate-400">4</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center shrink-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBVMLAGo2yeZT5bPh7fBW4sG1xMkucN0iTamCijmSwqHGvVNxXfdlM8urTWBKDdRPAqPy7YKL6GjJFmT5T6QZgaFZ3kFaU92AIhUgzhTRElPykRLAerOc6lrmapM8rFNTI27XodWCQjDF0M_lZMO3zScrLlYO6h0krpCnqBFwA1Qc5HdbHTOkMAd0qXs6mJRm4-s8Gi33StX-SjTChMnNvS9MuDTB_X-L_JZfKEdmKeJQ4H2kvlYdCwCasXPpClfV8E6HrznfV3GGs')"></div>
+<div class="flex-1">
+<p class="text-sm font-bold">Chris Evans</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-tight">18W - 2L · 90% Win</p>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-primary tracking-tight">1450</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-2xl border border-transparent dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-all cursor-pointer">
+<span class="w-4 text-sm font-bold text-slate-400">5</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center shrink-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVg9YHl2WjlsA-G7A7qXYRYhX2fdE3loHpxJR7DV_38JaC0mDuloVrQKdNBzsyuGV5amL-ESEl0sZLf_6J7JxLEbliFR7ALtCuJ-TBVYixraQRz5OiEMvghAmbMTiStOlnMB6YYsItLfLXgynKHDYbLsZskwc4p2cy1qQKO0nUXXfnMBcrMgrkPS-e8J4xpfmT_KXw7up7SHBqyXRmBNjwRAcay5uTrU00QzjyVLKYceSQ0vt19wAqY3UleG1g_OUHEgsgfG4qdfQ')"></div>
+<div class="flex-1">
+<p class="text-sm font-bold">Taylor Swift</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-tight">15W - 5L · 75% Win</p>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-primary tracking-tight">1412</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-2xl border border-transparent dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-all cursor-pointer">
+<span class="w-4 text-sm font-bold text-slate-400">6</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center shrink-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApBTQ7iG7EYbha3FAMyK_fpZCSitlj-0iqOvP1FzWvGX_wp0PiFlU7vFzKrjK0EBms2wv6U1plUpFUinN9H_K8dDEr45u4VKMuHq2K9RyHCT3pyma5Bw94bqni_zhL-K10IyTHmhV1vC7J6MAO0X_aqpc2axeK35U0EClpKwhMiauCaqxRPqi2PnkakgQUBLZOHasPgUp23gesVNXlcb2SRMU9otX7_DEzzp9p_pUDldnhhV4P2lLQr3maEBIRKU1TgaAxYho-uFE')"></div>
+<div class="flex-1">
+<p class="text-sm font-bold">Marcus Aurelius</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-tight">12W - 4L · 75% Win</p>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-primary tracking-tight">1385</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-2xl border border-transparent dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-all cursor-pointer">
+<span class="w-4 text-sm font-bold text-slate-400">7</span>
+<div class="w-12 h-12 rounded-full bg-cover bg-center shrink-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA7bhibCF3arqx9u0mOpVoFqmz81fTwQcJe3TjIr5gDs9gBf0mkDXg6Mw7wQcFKBWDSkP0RJO8MMqGtI5547qBwJJFk3okLyaTiuwDtZQmOaF80T3r6tgAqJuK25i_PsDfkqTewV7s1rugJ2-6M0FJnImTVSyuLNyG1KSGhU6gcCdRQ4Kk-Z-uksXlsBYajpghNOXuzrsRRh61cORqaHbrrvr1ERSYISB2Qx6oIjq83Y0pChb0GFvvtV5im5Flba5fNnzgLDvO99qk')"></div>
+<div class="flex-1">
+<p class="text-sm font-bold">Sarah Jenkins</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-tight">10W - 6L · 62% Win</p>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-primary tracking-tight">1320</p>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-28 right-6 z-40">
+<button class="px-8 py-4 bg-primary text-white rounded-full shadow-[0_8px_30px_rgb(19,91,236,0.4)] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform">
+<span class="text-sm font-bold tracking-wide">Log Match</span>
+</button>
+</div>
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 px-8 py-4 flex justify-between items-center z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined font-variation-fill">leaderboard</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Leaderboard</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Matches</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Leagues</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
+</button>
+</nav>
+<div class="h-10 bg-white dark:bg-slate-900"></div>
+</div>
+
+</body></html>
