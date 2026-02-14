@@ -50,6 +50,10 @@ You are an autonomous coding agent implementing features for a software project.
 
 13. Update `IMPLEMENTATION_PLAN.md` - mark the task as done, note any discoveries or bugs found.
 
+## Browser Verification
+
+When acceptance criteria include "verify in browser", use the `agent-browser` skill.
+
 ## Guardrails
 
 99999. Capture the why - document why tests and implementations matter, not just what they do.

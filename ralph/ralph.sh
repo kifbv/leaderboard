@@ -269,6 +269,9 @@ fi
 
 # --- Main loop ---
 ITERATION=0
+TOTAL_COST=0
+TOTAL_INPUT=0
+TOTAL_OUTPUT=0
 
 while true; do
   # Check max iterations
@@ -298,12 +301,33 @@ while true; do
     --model "$MODEL" \
     --verbose 2>&1 | tee /dev/stderr) || true
 
+  # --- Cost tracking ---
+  RESULT_LINE=$(echo "$OUTPUT" | grep '^{"type":"result"' | tail -1)
+  if [ -n "$RESULT_LINE" ]; then
+    ITER_COST=$(echo "$RESULT_LINE" | jq -r '.total_cost_usd // 0')
+    ITER_INPUT=$(echo "$RESULT_LINE" | jq -r '.usage.input_tokens // 0')
+    ITER_OUTPUT=$(echo "$RESULT_LINE" | jq -r '.usage.output_tokens // 0')
+    ITER_CACHE_READ=$(echo "$RESULT_LINE" | jq -r '.usage.cache_read_input_tokens // 0')
+    ITER_DURATION=$(echo "$RESULT_LINE" | jq -r '.duration_api_ms // 0')
+    ITER_TURNS=$(echo "$RESULT_LINE" | jq -r '.num_turns // 0')
+
+    TOTAL_COST=$(echo "$TOTAL_COST + $ITER_COST" | bc)
+    TOTAL_INPUT=$((TOTAL_INPUT + ITER_INPUT))
+    TOTAL_OUTPUT=$((TOTAL_OUTPUT + ITER_OUTPUT))
+
+    DURATION_S=$(echo "scale=1; $ITER_DURATION / 1000" | bc)
+    printf "\n  Cost: \$%.4f | Tokens: %s in / %s out (%s cache read) | %s turns | %ss\n" \
+      "$ITER_COST" "$ITER_INPUT" "$ITER_OUTPUT" "$ITER_CACHE_READ" "$ITER_TURNS" "$DURATION_S"
+    printf "  Cumulative: \$%.4f\n" "$TOTAL_COST"
+  fi
+
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
     echo ""
     echo "============================================"
     echo "  Ralph completed all tasks!"
     echo "  Finished at iteration $((ITERATION + 1))"
+    printf "  Total cost: \$%.4f\n" "$TOTAL_COST"
     echo "============================================"
     exit 0
   fi
@@ -325,5 +349,6 @@ done
 
 echo ""
 echo "Ralph reached max iterations ($MAX_ITERATIONS) without completing all tasks."
+printf "Total cost: \$%.4f across %d iterations\n" "$TOTAL_COST" "$ITERATION"
 [ -f "$PROGRESS_FILE" ] && echo "Check progress.txt for status."
 exit 1
