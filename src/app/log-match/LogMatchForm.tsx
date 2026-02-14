@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 type Player = {
@@ -193,12 +194,12 @@ export default function LogMatchForm({ players }: { players: Player[] }) {
     <div className="min-h-screen bg-background-dark flex flex-col">
       {/* Modal-style sticky header */}
       <header className="sticky top-0 z-10 bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-slate-800">
-        <a
+        <Link
           href="/"
           className="w-10 h-10 flex items-center justify-start text-slate-500 hover:text-primary transition-colors"
         >
           <span className="material-symbols-outlined text-2xl">close</span>
-        </a>
+        </Link>
         <h1 className="text-lg font-semibold tracking-tight">Log Match</h1>
         <div className="w-10" />
       </header>

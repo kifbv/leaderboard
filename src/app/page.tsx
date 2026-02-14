@@ -72,7 +72,6 @@ export default async function LeaderboardPage() {
             {podiumOrder.map((player) => {
               const isFirst = player.rank === 1;
               const isSecond = player.rank === 2;
-              const isThird = player.rank === 3;
               const initial = player.name.charAt(0).toUpperCase();
               const colorClass = avatarColor(player.name);
 

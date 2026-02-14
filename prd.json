@@ -377,7 +377,7 @@
       ],
       "category": "design-alignment",
       "priority": 20,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-013"],
       "notes": "File: src/app/admin/[secret]/AdminRosterForm.tsx. No design reference — inherit global dark theme."
     },
@@ -395,7 +395,7 @@
       ],
       "category": "design-alignment",
       "priority": 21,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-016", "US-019", "US-020"],
       "notes": "Visual verification is manual — run dev server and check in browser."
     }
