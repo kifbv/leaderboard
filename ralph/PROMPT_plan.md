@@ -81,3 +81,9 @@ Stories execute in priority order. Earlier stories must not depend on later ones
 999999999. Every story in prd.json must have "Typecheck passes" in acceptance criteria.
 9999999999. UI stories must have "Verify in browser" in acceptance criteria.
 99999999999. Keep `IMPLEMENTATION_PLAN.md` current with learnings - future work depends on this.
+
+## Stop Condition
+
+After creating or updating `IMPLEMENTATION_PLAN.md` and `prd.json`, reply with:
+
+<promise>COMPLETE</promise>

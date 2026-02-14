@@ -39,3 +39,9 @@ You are an autonomous agent creating a SCOPED implementation plan for specific w
 9999999. Each story must be completable in one Ralph iteration.
 99999999. Don't assume functionality is missing - confirm with code search first.
 999999999. Order tasks by dependency: setup -> schema -> backend -> frontend -> polish.
+
+## Stop Condition
+
+After creating or updating `IMPLEMENTATION_PLAN.md` and `prd.json`, reply with:
+
+<promise>COMPLETE</promise>

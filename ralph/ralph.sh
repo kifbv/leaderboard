@@ -74,6 +74,11 @@ case "${1:-}" in
     ;;
 esac
 
+# Safety default: plan modes should complete in 1 iteration
+if [ "$MAX_ITERATIONS" -eq 0 ] && { [ "$MODE" = "plan" ] || [ "$MODE" = "plan-work" ]; }; then
+  MAX_ITERATIONS=1
+fi
+
 # --- Update mode: fetch latest ralph files from upstream ---
 if [ "$MODE" = "update" ]; then
   RALPH_DIR="$PROJECT_DIR/ralph"
