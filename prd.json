@@ -1,7 +1,7 @@
 {
   "name": "Ping Pong Leaderboard",
-  "branchName": "ralph/leaderboard-v1",
-  "description": "Mobile-first web app for recording office ping pong matches and tracking ELO rankings. Next.js App Router + Prisma + SQLite.",
+  "branchName": "ralph/design-alignment",
+  "description": "Restyle all UI pages to match the design references in designs/. Dark mode, Lexend font, podium layout, card rows, modal-style log match, and consistent admin page.",
   "userStories": [
     {
       "id": "US-001",
@@ -232,6 +232,163 @@
       "passes": true,
       "dependsOn": ["US-011"],
       "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Set up global dark theme with Lexend font and color tokens",
+      "description": "As a user, I want the app to use a dark theme with Lexend font so that it matches the design mockups.",
+      "acceptanceCriteria": [
+        "Lexend and Material Symbols Outlined fonts are imported in globals.css",
+        "Tailwind theme tokens defined: primary (#135bec), bg-dark (#0b121e), card-dark (#0d1625)",
+        "layout.tsx uses dark mode class, Lexend font-family, dark background",
+        "Old light-mode nav bar removed from layout (pages handle their own headers)",
+        "max-w-md centered container wraps all content",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 13,
+      "passes": false,
+      "dependsOn": ["US-004"],
+      "notes": "This is a styling-only change. No functionality changes. Ref: designs/global-leaderboard.html, designs/log-match-result.html"
+    },
+    {
+      "id": "US-014",
+      "title": "Restyle leaderboard — sticky header and floating action button",
+      "description": "As a user, I want a sticky header with the app title and a floating 'Log Match' button so I can always navigate easily.",
+      "acceptanceCriteria": [
+        "Sticky header with blur backdrop at top of leaderboard page",
+        "Header shows sports_tennis Material Symbol icon in primary color and 'TGSB Leaderboard' title",
+        "No search bar (out of v1 scope)",
+        "Floating 'Log Match' FAB button in bottom-right, primary color, rounded-full with shadow",
+        "FAB links to /log-match",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 14,
+      "passes": false,
+      "dependsOn": ["US-013"],
+      "notes": "Ref: designs/global-leaderboard.html. No bottom nav bar (out of scope)."
+    },
+    {
+      "id": "US-015",
+      "title": "Restyle leaderboard — top-3 podium layout",
+      "description": "As a user, I want the top 3 players displayed in a podium layout so the leaders stand out visually.",
+      "acceptanceCriteria": [
+        "Top-3 players shown in podium: 2nd left, 1st center (raised), 3rd right",
+        "1st place: larger circle (w-20 h-20), primary border with glow, '1st' badge in primary",
+        "2nd place: medium circle (w-16 h-16), slate border, '2nd' badge",
+        "3rd place: medium circle (w-16 h-16), bronze border (#b87333), '3rd' badge",
+        "Initials circles with deterministic color (not avatar images)",
+        "Each position shows: name (truncated), ELO in primary, 'XW - YL' subtitle",
+        "Handles fewer than 3 players gracefully (hide empty podium slots)",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 15,
+      "passes": false,
+      "dependsOn": ["US-013"],
+      "notes": "Ref: designs/global-leaderboard.html. Avatar images are out of v1 scope — use colored initials circles."
+    },
+    {
+      "id": "US-016",
+      "title": "Restyle leaderboard — card rows for 4th+ players",
+      "description": "As a user, I want players ranked 4th and below shown in styled card rows so the leaderboard looks polished.",
+      "acceptanceCriteria": [
+        "HTML table removed, replaced with card-style rows",
+        "Each card: rank number, initials avatar circle, player name, 'XW - YL · Z% Win' subtitle, ELO right-aligned in primary color",
+        "Cards use bg-card-dark (#0d1625), rounded-2xl, hover state",
+        "Empty state styled for dark mode",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 16,
+      "passes": false,
+      "dependsOn": ["US-015"],
+      "notes": "Ref: designs/global-leaderboard.html"
+    },
+    {
+      "id": "US-017",
+      "title": "Restyle log match page — modal layout, header, and dark theme",
+      "description": "As a user, I want the log match page styled as a modal-like screen with a close button so it feels like a focused action.",
+      "acceptanceCriteria": [
+        "Sticky header with close (X) button linking to /, centered 'Log Match' title",
+        "Dark mode background consistent with design (#101622)",
+        "Singles/Doubles toggle restyled for dark mode (primary active, slate inactive)",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 17,
+      "passes": false,
+      "dependsOn": ["US-013"],
+      "notes": "Ref: designs/log-match-result.html. Set scores section is already replaced with winner selection."
+    },
+    {
+      "id": "US-018",
+      "title": "Restyle log match page — dropdowns and 'Who played?' section",
+      "description": "As a user, I want styled player dropdowns with a clear 'Who played?' heading so the form is intuitive.",
+      "acceptanceCriteria": [
+        "'Who played?' centered heading with 'Select the match participants' subtitle",
+        "2-column grid layout for Player 1 and Player 2 dropdowns (singles mode)",
+        "Labels: uppercase, primary color, small tracking-widest text",
+        "Select elements: dark bg, slate borders, rounded-xl, custom chevron, white text",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 18,
+      "passes": false,
+      "dependsOn": ["US-017"],
+      "notes": "Ref: designs/log-match-result.html"
+    },
+    {
+      "id": "US-019",
+      "title": "Restyle log match page — winner buttons and feedback",
+      "description": "As a user, I want winner selection buttons and result feedback styled for dark mode so the experience is cohesive.",
+      "acceptanceCriteria": [
+        "Winner selection buttons: primary color bg, rounded-xl, shadow, consistent with design aesthetic",
+        "Success feedback: dark green-tinted background with green text",
+        "Error feedback: dark red-tinted background with red text",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 19,
+      "passes": false,
+      "dependsOn": ["US-018"],
+      "notes": "Ref: designs/log-match-result.html"
+    },
+    {
+      "id": "US-020",
+      "title": "Restyle admin page for dark mode consistency",
+      "description": "As an admin, I want the roster management page to use dark mode styling consistent with the rest of the app.",
+      "acceptanceCriteria": [
+        "Form inputs: dark background, slate borders, white text",
+        "Buttons: primary color styling",
+        "Player list: card-dark background, slate dividers",
+        "Labels and headings: white/slate text appropriate for dark mode",
+        "Typecheck passes"
+      ],
+      "category": "design-alignment",
+      "priority": 20,
+      "passes": false,
+      "dependsOn": ["US-013"],
+      "notes": "No design reference for admin — just inherit global dark theme for consistency."
+    },
+    {
+      "id": "US-021",
+      "title": "Final QA — build, lint, typecheck, visual verification",
+      "description": "As a developer, I want all validation checks to pass and the UI to look correct at 375px so the design alignment is complete.",
+      "acceptanceCriteria": [
+        "npx tsc --noEmit passes",
+        "npm run build passes",
+        "npm run lint passes",
+        "Leaderboard page looks correct at 375px viewport",
+        "Log Match page looks correct at 375px viewport",
+        "Admin page looks correct at 375px viewport"
+      ],
+      "category": "design-alignment",
+      "priority": 21,
+      "passes": false,
+      "dependsOn": ["US-016", "US-019", "US-020"],
+      "notes": "Visual verification is manual — run dev server and check in browser."
     }
   ]
 }

@@ -9,9 +9,9 @@ Ping Pong Leaderboard — a mobile-first web app for recording office ping pong 
 
 ## Current State
 
-- Greenfield: `src/` directory exists but is empty — no source code yet
-- Specs complete for all 3 features: See the Standings, Record a Match, Manage the Roster
-- Implementation plan and prd.json created; no stories started
+- All functionality complete (US-001 through US-012)
+- UI uses basic light-mode styling — needs restyling to match design references in `designs/`
+- Phase 7 (Design Alignment) adds US-013 through US-021 for visual polish
 
 ## Tasks
 
@@ -110,6 +110,67 @@ Tasks are ordered by dependency: setup → schema → backend logic → API rout
   - Wrong secret calls `notFound()` → renders app 404 page
   - New players sorted into list client-side with `localeCompare`
   - Source: manage-the-roster.md US-004
+
+### Phase 7: Design Alignment (UI Restyle)
+
+All functionality is complete. This phase restyles the UI to match the design references in `designs/`.
+
+- [ ] **US-013: Set up global dark theme with Lexend font and color tokens**
+  - Import Lexend + Material Symbols fonts in globals.css
+  - Define Tailwind theme tokens: primary (#135bec), bg-dark (#0b121e), card-dark (#0d1625)
+  - Update layout.tsx: dark mode, Lexend font, remove old light nav bar
+  - Source: designs/global-leaderboard.html
+
+- [ ] **US-014: Restyle leaderboard — sticky header and floating action button**
+  - Sticky header with blur backdrop, sports_tennis icon, "TGSB Leaderboard" title
+  - Floating "Log Match" FAB button (bottom-right, primary color, rounded-full with shadow)
+  - No search bar (out of v1 scope), no bottom nav (out of v1 scope)
+  - Source: designs/global-leaderboard.html
+
+- [ ] **US-015: Restyle leaderboard — top-3 podium layout**
+  - 1st place centered/larger with primary border and glow, "1st" badge
+  - 2nd place left with slate border, "2nd" badge
+  - 3rd place right with bronze border, "3rd" badge
+  - Initials circles (not avatar images — out of v1 scope)
+  - Each: name, ELO in primary, W-L subtitle
+  - Handle <3 players gracefully
+  - Source: designs/global-leaderboard.html
+
+- [ ] **US-016: Restyle leaderboard — card rows for 4th+ players**
+  - Replace HTML table with card-style rows per design
+  - Each card: rank number, initials avatar circle, name, "XW - YL · Z% Win", ELO right-aligned in primary
+  - Dark card background (#0d1625), rounded-2xl, hover state
+  - Update empty state for dark mode
+  - Source: designs/global-leaderboard.html
+
+- [ ] **US-017: Restyle log match page — modal layout, header, and dark theme**
+  - Modal-style full screen with close (X) button linking to /
+  - Centered "Log Match" title in header
+  - Dark mode background, Lexend font
+  - Restyle Singles/Doubles toggle for dark mode
+  - Source: designs/log-match-result.html
+
+- [ ] **US-018: Restyle log match page — dropdowns and "Who played?" section**
+  - "Who played?" heading with subtitle, centered
+  - 2-column grid player dropdowns with primary color uppercase labels
+  - Dark-styled selects: dark bg, slate borders, rounded-xl, custom chevron
+  - Source: designs/log-match-result.html
+
+- [ ] **US-019: Restyle log match page — winner buttons and feedback**
+  - Restyle winner selection buttons for dark mode (primary color, rounded, shadow)
+  - Restyle success/error feedback for dark mode
+  - Source: designs/log-match-result.html
+
+- [ ] **US-020: Restyle admin page for dark mode consistency**
+  - No design reference — inherit global dark theme
+  - Dark inputs, primary buttons, card-dark player list, white text
+  - Source: none (consistency pass)
+
+- [ ] **US-021: Final QA — build, lint, typecheck, visual verification**
+  - `npx tsc --noEmit` passes
+  - `npm run build` passes
+  - `npm run lint` passes
+  - Visual check at 375px for all three pages
 
 ## Notes
 
