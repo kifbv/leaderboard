@@ -248,7 +248,7 @@
       ],
       "category": "design-alignment",
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-004"],
       "notes": "Styling-only. Tailwind v4 uses @theme {} in CSS, not tailwind.config.js. Files: src/app/globals.css, src/app/layout.tsx. Ref: designs/global-leaderboard.html, designs/log-match-result.html"
     },
@@ -267,7 +267,7 @@
       ],
       "category": "design-alignment",
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-013"],
       "notes": "File: src/app/page.tsx. Replace existing <h1>Standings</h1> with sticky header. Ref: designs/global-leaderboard.html"
     },
@@ -287,7 +287,7 @@
       ],
       "category": "design-alignment",
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-013"],
       "notes": "File: src/app/page.tsx. Use initials circles (not images). Ref: designs/global-leaderboard.html"
     },
@@ -305,7 +305,7 @@
       ],
       "category": "design-alignment",
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "dependsOn": ["US-015"],
       "notes": "File: src/app/page.tsx. Ref: designs/global-leaderboard.html"
     },
