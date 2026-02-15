@@ -26,3 +26,6 @@ Thumbs.db
 .last-branch
 
 /src/generated/prisma
+
+# Claude
+.claude/settings.local.json
