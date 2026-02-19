@@ -4,6 +4,7 @@
 #
 # Modes:
 #   interview              Phase 1: Interactive project interview (no loop)
+#   infra                  Phase 1b: AWS SAM infrastructure design (no loop, optional)
 #   discover [max]         Phase 2: Feature spec generation
 #   plan [max]             Phase 3: Gap analysis + task list
 #   plan-work "desc" [max] Scoped planning for a specific work branch
@@ -32,6 +33,10 @@ DELAY="${RALPH_DELAY:-3}"
 case "${1:-}" in
   interview)
     MODE="interview"
+    shift
+    ;;
+  infra)
+    MODE="infra"
     shift
     ;;
   discover)
@@ -115,7 +120,7 @@ if [ "$MODE" = "update" ]; then
   fi
 
   # Update prompts
-  for prompt in PROMPT_build PROMPT_plan PROMPT_plan_work PROMPT_discover PROMPT_interview; do
+  for prompt in PROMPT_build PROMPT_plan PROMPT_plan_work PROMPT_discover PROMPT_interview PROMPT_infra; do
     if curl -sfL "$REPO_URL/prompts/${prompt}.md" -o "$RALPH_DIR/${prompt}.md.tmp"; then
       mv "$RALPH_DIR/${prompt}.md.tmp" "$RALPH_DIR/${prompt}.md"
       echo "  Updated ${prompt}.md"
@@ -128,7 +133,7 @@ if [ "$MODE" = "update" ]; then
 
   # Update skills
   SKILLS_DIR="$PROJECT_DIR/.claude/skills"
-  for skill in design-sync discover interview prd prd-to-json; do
+  for skill in design-sync discover infra interview prd prd-to-json; do
     mkdir -p "$SKILLS_DIR/$skill"
     if curl -sfL "$REPO_URL/skills/${skill}/SKILL.md" -o "$SKILLS_DIR/$skill/SKILL.md.tmp"; then
       mv "$SKILLS_DIR/$skill/SKILL.md.tmp" "$SKILLS_DIR/$skill/SKILL.md"
@@ -156,6 +161,7 @@ fi
 # Select prompt file based on mode
 case "$MODE" in
   interview)   PROMPT_FILE="$SCRIPT_DIR/../prompts/PROMPT_interview.md" ;;
+  infra)       PROMPT_FILE="$SCRIPT_DIR/../prompts/PROMPT_infra.md" ;;
   discover)    PROMPT_FILE="$SCRIPT_DIR/../prompts/PROMPT_discover.md" ;;
   plan)        PROMPT_FILE="$SCRIPT_DIR/../prompts/PROMPT_plan.md" ;;
   plan-work)   PROMPT_FILE="$SCRIPT_DIR/../prompts/PROMPT_plan_work.md" ;;
@@ -177,7 +183,7 @@ fi
 # Select model based on mode
 if [ -n "${RALPH_MODEL:-}" ]; then
   MODEL="$RALPH_MODEL"
-elif [ "$MODE" = "plan" ] || [ "$MODE" = "plan-work" ] || [ "$MODE" = "discover" ]; then
+elif [ "$MODE" = "plan" ] || [ "$MODE" = "plan-work" ] || [ "$MODE" = "discover" ] || [ "$MODE" = "infra" ]; then
   MODEL="opus"
 else
   MODEL="sonnet"
@@ -249,9 +255,9 @@ echo "  Branch: $(cd "$PROJECT_DIR" && git branch --show-current 2>/dev/null || 
 echo "============================================"
 echo ""
 
-# --- Interview mode: single interactive session (not looped) ---
-if [ "$MODE" = "interview" ]; then
-  echo "Starting interactive interview session..."
+# --- Interview/Infra mode: single interactive session (not looped) ---
+if [ "$MODE" = "interview" ] || [ "$MODE" = "infra" ]; then
+  echo "Starting interactive $MODE session..."
   echo "Press Ctrl+C to abort at any time."
   echo ""
   cd "$PROJECT_DIR"

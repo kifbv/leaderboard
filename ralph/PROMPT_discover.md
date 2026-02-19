@@ -7,6 +7,7 @@ You are an autonomous agent discovering and specifying features for a greenfield
 0a. Study `specs/project-overview.md` to understand the project vision, JTBD, and scope.
 0b. Study `specs/*` to see which JTBD topics already have detailed feature specs.
 0c. Study `IMPLEMENTATION_PLAN.md` if it exists for additional context.
+0d. Read `specs/infrastructure.md` if it exists. Reference actual AWS resource names (Lambda function names, DynamoDB table names, API endpoints, etc.) in feature specs when relevant.
 
 ## Task
 

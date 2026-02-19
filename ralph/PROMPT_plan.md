@@ -7,6 +7,7 @@ You are an autonomous agent creating an implementation plan for a greenfield pro
 0a. Study `specs/*` to learn the project specifications and feature requirements.
 0b. Study `IMPLEMENTATION_PLAN.md` if it exists to understand the plan so far.
 0c. Study existing source code (if any) to understand current state.
+0d. Read `specs/infrastructure.md` and `infra/template.yaml` if they exist to understand the AWS infrastructure design.
 
 ## Task
 
@@ -66,11 +67,14 @@ Stories execute in priority order. Earlier stories must not depend on later ones
 
 **Correct order:**
 1. Project setup / configuration
-2. Schema / database changes
-3. Server actions / backend logic
-4. UI components that use the backend
-5. Dashboard / summary views
-6. Polish / edge cases
+2. Infrastructure deployment (if `specs/infrastructure.md` exists)
+3. Schema / database changes
+4. Server actions / backend logic
+5. UI components that use the backend
+6. Dashboard / summary views
+7. Polish / edge cases
+
+**Infrastructure stories:** If `specs/infrastructure.md` exists, generate infrastructure deployment stories (category: `infrastructure`) early in the dependency chain. The first infra story should deploy the initial SAM stack. Subsequent infra stories can modify `infra/template.yaml` as needed by later features.
 
 ## Guardrails
 
